@@ -14,7 +14,7 @@
 	<context:annotation-config />
 	
 	<!-- 默认扫描的包路径 -->
-	<context:component-scan base-package="com.ddup" use-default-filters="false">
+	<context:component-scan base-package="com.lm" use-default-filters="false">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
 	</context:component-scan>
@@ -59,8 +59,6 @@
    	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
    		<property name="configLocation" value="classpath:mybatis-config.xml" />  
         <property name="dataSource" ref="dataSource" />
-        <!-- 自动配置别名
-        <property name="typeAliasesPackage" value="com.ddup.ddup" /> -->
    	</bean>
    
     <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">  

@@ -29,9 +29,9 @@
     
     <!-- 别名定义 -->
     <typeAliases>
-        <typeAlias alias="Privilege" type="com.ddup.sys.model.Privilege" />
-        <typeAlias alias="Role" type="com.ddup.sys.model.Role" />
-        <typeAlias alias="User" type="com.ddup.sys.model.User" />
+        <typeAlias alias="Privilege" type="com.lm.sys.model.Privilege" />
+        <typeAlias alias="Role" type="com.lm.sys.model.Role" />
+        <typeAlias alias="User" type="com.lm.sys.model.User" />
     </typeAliases>
 
     <!-- 
@@ -69,9 +69,9 @@
 	
 	<!-- 映射文件，存放sql语句的配置文件 -->
     <mappers>
-        <mapper resource="com/ddup/sys/dao/mapper/PrivilegeMapper.xml" />
-        <mapper resource="com/ddup/sys/dao/mapper/RoleMapper.xml" />
-        <mapper resource="com/ddup/sys/dao/mapper/UserMapper.xml" />
+        <mapper resource="com/lm/sys/dao/mapper/PrivilegeMapper.xml" />
+        <mapper resource="com/lm/sys/dao/mapper/RoleMapper.xml" />
+        <mapper resource="com/lm/sys/dao/mapper/UserMapper.xml" />
     </mappers>
 
 </configuration> 

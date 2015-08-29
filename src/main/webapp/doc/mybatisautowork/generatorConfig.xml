@@ -32,7 +32,7 @@
         </javaTypeResolver>
         
         <!-- 生成模型的包名和位置,targetProject使用的是绝对路径 -->
-        <javaModelGenerator targetPackage="com.ddup.sys.model" targetProject="F:\Workspaces\Eclipse4.4WS1\ssmMvn\src\main\java">
+        <javaModelGenerator targetPackage="com.lm.sys.model" targetProject="F:\Workspaces\Eclipse4.4WS1\ssmMvn\src\main\java">
             <!-- 如果true，MBG会根据catalog和schema来生成子包。如果false就会直接用targetPackage属性。默认为false -->
             <property name="enableSubPackages" value="false"/>
             <!-- 数据库查询结果trim -->
@@ -40,12 +40,12 @@
         </javaModelGenerator>
         
         <!-- 生成映射文件的包名和位置 -->
-        <sqlMapGenerator targetPackage="com.ddup.sys.dao.mapper" targetProject="F:\Workspaces\Eclipse4.4WS1\ssmMvn\src\main\java">
+        <sqlMapGenerator targetPackage="com.lm.sys.dao.mapper" targetProject="F:\Workspaces\Eclipse4.4WS1\ssmMvn\src\main\java">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         
         <!-- 生成DAO的包名和位置,XMLMAPPER所有的方法都在XML中，接口调用依赖XML文件 -->
-        <javaClientGenerator targetPackage="com.ddup.sys.dao" implementationPackage="com.ddup.sys.dao.impl" type="XMLMAPPER" targetProject="F:\Workspaces\Eclipse4.4WS1\ssmMvn\src\main\java">
+        <javaClientGenerator targetPackage="com.lm.sys.dao" implementationPackage="com.lm.sys.dao.impl" type="XMLMAPPER" targetProject="F:\Workspaces\Eclipse4.4WS1\ssmMvn\src\main\java">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
         

@@ -46,7 +46,7 @@
     </script>
 </head>
 <body class="easyui-layout">
-    <div data-options="region:'north',border:false" style="height:80px;background:#B3DFDA;padding:10px">天天向上</div>
+    <div data-options="region:'north',border:false" style="height:80px;background:#B3DFDA;padding:10px">雷鸣教育</div>
     <div data-options="region:'west',split:true,title:'导航菜单'" style="width:150px;">
         <ul id="navigateTree" class="ztree"></ul>
     </div>

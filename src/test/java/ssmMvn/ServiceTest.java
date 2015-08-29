@@ -10,9 +10,9 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ddup.sys.action.PrivilegeAction;
-import com.ddup.sys.dao.PrivilegeMapper;
-import com.ddup.sys.service.PrivilegeService;
+import com.lm.sys.action.PrivilegeAction;
+import com.lm.sys.dao.PrivilegeMapper;
+import com.lm.sys.service.PrivilegeService;
 
 public class ServiceTest {
 

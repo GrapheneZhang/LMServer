@@ -225,7 +225,7 @@ a {
         </form>
     </div>
     <div style="text-align: center;">
-        <p>天天向上</p>
+        <p>雷鸣教育</p>
     </div>
 </body>
 </html>

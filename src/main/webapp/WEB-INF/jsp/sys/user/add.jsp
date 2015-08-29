@@ -2,7 +2,7 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/validate/jquery.form.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/validate/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/validate/additional-methods.min.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/validate/additional-methods-ddup.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/validate/additional-methods-lm.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/validate/messages_zh.js"></script>
 <script type="text/javascript">
 <%-- Ztree --%>
