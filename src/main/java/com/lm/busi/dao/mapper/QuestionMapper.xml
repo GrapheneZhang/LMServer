@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lm.busi.dao.QuestionMapper">
+	<resultMap id="BaseResultMap" type="com.lm.busi.model.Question">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="answer" property="answer" jdbcType="VARCHAR" />
+		<result column="subject" property="subject" jdbcType="SMALLINT" />
+		<result column="update_time" property="updateTime" jdbcType="DATE" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, content, answer, subject, update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from lm_question
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from lm_question
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.lm.busi.model.Question">
+		insert into lm_question (id, content, answer,
+		subject, update_time)
+		values (#{id,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR},
+		#{answer,jdbcType=VARCHAR},
+		#{subject,jdbcType=SMALLINT}, #{updateTime,jdbcType=DATE})
+	</insert>
+	<insert id="insertSelective" parameterType="com.lm.busi.model.Question">
+		insert into lm_question
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="answer != null">
+				answer,
+			</if>
+			<if test="subject != null">
+				subject,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="answer != null">
+				#{answer,jdbcType=VARCHAR},
+			</if>
+			<if test="subject != null">
+				#{subject,jdbcType=SMALLINT},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=DATE},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.lm.busi.model.Question">
+		update lm_question
+		<set>
+			<if test="content != null">
+				content = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="answer != null">
+				answer = #{answer,jdbcType=VARCHAR},
+			</if>
+			<if test="subject != null">
+				subject = #{subject,jdbcType=SMALLINT},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=DATE},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.lm.busi.model.Question">
+		update lm_question
+		set content = #{content,jdbcType=VARCHAR},
+		answer = #{answer,jdbcType=VARCHAR},
+		subject = #{subject,jdbcType=SMALLINT},
+		update_time = #{updateTime,jdbcType=DATE}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>

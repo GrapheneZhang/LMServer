@@ -27,7 +27,7 @@ CREATE TABLE `lm_question` (
   `update_time` date DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `FK_TOPIC_TOPIC_TYPE` (`subject`),
-  CONSTRAINT `fk_lm_question_lm_question_subject_1` FOREIGN KEY (`subject`) REFERENCES `lm_question_subject` (`id`) ON DELETE SET NULL
+  CONSTRAINT `fk_lm_question_lm_subject_1` FOREIGN KEY (`subject`) REFERENCES `lm_subject` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -35,18 +35,19 @@ CREATE TABLE `lm_question` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for lm_question_subject
+-- Table structure for lm_subject
 -- ----------------------------
-DROP TABLE IF EXISTS `lm_question_subject`;
-CREATE TABLE `lm_question_subject` (
+DROP TABLE IF EXISTS `lm_subject`;
+CREATE TABLE `lm_subject` (
   `id` smallint(5) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `en_name` varchar(255) NOT NULL DEFAULT '' COMMENT '英文科目名',
   `zh_name` varchar(255) NOT NULL DEFAULT '' COMMENT '中文科目名',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `UNIQUE_NAME` (`en_name`, `zh_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of lm_question_subject
+-- Records of lm_subject
 -- ----------------------------
 
 -- ----------------------------
@@ -59,7 +60,8 @@ CREATE TABLE `lm_user` (
   `user_mac` varchar(20) DEFAULT '' COMMENT '用户手机Mac地址',
   `user_proof_rule` varchar(80) DEFAULT '' COMMENT '用户令牌',
   `is_active` bit(1) DEFAULT b'0' COMMENT '是否激活，0位激活，1已激活',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `UNIQUE_USERNAME` (`user_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -74,8 +76,8 @@ CREATE TABLE `lm_user_subject` (
   `user_id` bigint(20) NOT NULL COMMENT '主 外键依赖user',
   `subject_id` smallint(6) NOT NULL COMMENT '主 外键依赖subject',
   PRIMARY KEY (`user_id`,`subject_id`),
-  KEY `fk_lm_user_subject_lm_question_subject_1` (`subject_id`),
-  CONSTRAINT `fk_lm_user_subject_lm_question_subject_1` FOREIGN KEY (`subject_id`) REFERENCES `lm_question_subject` (`id`) ON DELETE CASCADE,
+  KEY `fk_lm_user_subject_lm_subject_1` (`subject_id`),
+  CONSTRAINT `fk_lm_user_subject_lm_subject_1` FOREIGN KEY (`subject_id`) REFERENCES `lm_subject` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_lm_user_subject_lm_user_1` FOREIGN KEY (`user_id`) REFERENCES `lm_user` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -8,7 +8,7 @@
     <!-- location和src写实际需要的磁盘路径 -->
 
     <!-- 数据库驱动 -->
-    <classPathEntry location="C:\Users\dznzyx\.m2\repository\mysql\mysql-connector-java\5.1.9\mysql-connector-java-5.1.9.jar"/>
+    <classPathEntry location="C:\Users\ZhangYaxu\.m2\repository\mysql\mysql-connector-java\5.1.9\mysql-connector-java-5.1.9.jar"/>
     
     <context id="MySql" targetRuntime="MyBatis3" defaultModelType="flat">
         <!-- 给表/字段名加上反单引号，因为有时候表名为两个单词中间一个空格 -->
@@ -22,7 +22,7 @@
         </commentGenerator>
         
         <!-- 数据库链接URL，用户名、密码 -->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/casual" userId="root" password="root"></jdbcConnection>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/db_leiming" userId="root" password="root"></jdbcConnection>
         
         <!-- 是否强制DECIMAL和NUMERIC类型的字段转换为Java类型的java.math.BigDecimal -->
         <javaTypeResolver>
@@ -30,7 +30,7 @@
         </javaTypeResolver>
         
         <!-- 生成模型的包名和位置,targetProject使用的是绝对路径 -->
-        <javaModelGenerator targetPackage="com.lm.sys.model" targetProject="F:\Workspaces\Eclipse4.4WS1\ssmMvn\src\main\java">
+        <javaModelGenerator targetPackage="com.lm.busi.model" targetProject="E:\Java\eclipseWorkspaceYHT2\LMServer\src\main\java">
             <!-- 如果true，MBG会根据catalog和schema来生成子包。如果false就会直接用targetPackage属性。默认为false -->
             <property name="enableSubPackages" value="false"/>
             <!-- 数据库查询结果trim -->
@@ -38,21 +38,21 @@
         </javaModelGenerator>
         
         <!-- 生成映射文件的包名和位置 -->
-        <sqlMapGenerator targetPackage="com.lm.sys.dao.mapper" targetProject="F:\Workspaces\Eclipse4.4WS1\ssmMvn\src\main\java">
+        <sqlMapGenerator targetPackage="com.lm.busi.dao.mapper" targetProject="E:\Java\eclipseWorkspaceYHT2\LMServer\src\main\java">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         
         <!-- 生成DAO的包名和位置,XMLMAPPER所有的方法都在XML中，接口调用依赖XML文件 -->
-        <javaClientGenerator targetPackage="com.lm.sys.dao" implementationPackage="com.lm.sys.dao.impl" type="XMLMAPPER" targetProject="F:\Workspaces\Eclipse4.4WS1\ssmMvn\src\main\java">
+        <javaClientGenerator targetPackage="com.lm.busi.dao" implementationPackage="com.lm.busi.dao.impl" type="XMLMAPPER" targetProject="E:\Java\eclipseWorkspaceYHT2\LMServer\src\main\java">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
         
         <!-- 要生成哪些表 全部为tableName="%" -->
         <!-- enableXXX:XXX代表多种SQL方法，该属性用来指定是否生成对应的XXX语句 -->
-        <table tableName="sys_privilege" domainObjectName="Privilege" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+        <table tableName="lm_question" domainObjectName="Question" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
             <!-- 列重命名<columnRenamingRule searchString="^CUST_" replaceString="" /> -->
         </table>
-        <table tableName="sys_role" domainObjectName="Role" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
-        <table tableName="sys_user" domainObjectName="User" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
+        <table tableName="lm_subject" domainObjectName="Subject" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
+        <table tableName="lm_user" domainObjectName="LMUser" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
     </context>
 </generatorConfiguration>

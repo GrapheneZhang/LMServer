@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lm.busi.dao.LMUserMapper">
+	<resultMap id="BaseResultMap" type="com.lm.busi.model.LMUser">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="user_mac" property="userMac" jdbcType="VARCHAR" />
+		<result column="user_proof_rule" property="userProofRule"
+			jdbcType="VARCHAR" />
+		<result column="is_active" property="isActive" jdbcType="BIT" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_name, user_mac, user_proof_rule, is_active
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from lm_user
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from lm_user
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.lm.busi.model.LMUser">
+		insert into lm_user (id, user_name, user_mac,
+		user_proof_rule, is_active)
+		values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR},
+		#{userMac,jdbcType=VARCHAR},
+		#{userProofRule,jdbcType=VARCHAR}, #{isActive,jdbcType=BIT})
+	</insert>
+	<insert id="insertSelective" parameterType="com.lm.busi.model.LMUser">
+		insert into lm_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="userMac != null">
+				user_mac,
+			</if>
+			<if test="userProofRule != null">
+				user_proof_rule,
+			</if>
+			<if test="isActive != null">
+				is_active,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="userMac != null">
+				#{userMac,jdbcType=VARCHAR},
+			</if>
+			<if test="userProofRule != null">
+				#{userProofRule,jdbcType=VARCHAR},
+			</if>
+			<if test="isActive != null">
+				#{isActive,jdbcType=BIT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.lm.busi.model.LMUser">
+		update lm_user
+		<set>
+			<if test="userName != null">
+				user_name = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="userMac != null">
+				user_mac = #{userMac,jdbcType=VARCHAR},
+			</if>
+			<if test="userProofRule != null">
+				user_proof_rule = #{userProofRule,jdbcType=VARCHAR},
+			</if>
+			<if test="isActive != null">
+				is_active = #{isActive,jdbcType=BIT},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.lm.busi.model.LMUser">
+		update lm_user
+		set user_name = #{userName,jdbcType=VARCHAR},
+		user_mac = #{userMac,jdbcType=VARCHAR},
+		user_proof_rule = #{userProofRule,jdbcType=VARCHAR},
+		is_active = #{isActive,jdbcType=BIT}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>
