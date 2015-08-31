@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.lm.busi.dao.SubjectMapper">
-	<resultMap id="BaseResultMap" type="com.lm.busi.model.Subject">
+
+	<resultMap id="BaseResultMap" type="Subject">
 		<id column="id" property="id" jdbcType="SMALLINT" />
 		<result column="en_name" property="enName" jdbcType="VARCHAR" />
 		<result column="zh_name" property="zhName" jdbcType="VARCHAR" />
@@ -20,14 +21,14 @@
 		delete from lm_subject
 		where id = #{id,jdbcType=SMALLINT}
 	</delete>
-	<insert id="insert" parameterType="com.lm.busi.model.Subject">
-		insert into lm_subject (id, en_name, zh_name
+	<insert id="insert" parameterType="Subject">
+		insert into lm_subject (en_name, zh_name
 		)
-		values (#{id,jdbcType=SMALLINT}, #{enName,jdbcType=VARCHAR},
+		values (#{enName,jdbcType=VARCHAR},
 		#{zhName,jdbcType=VARCHAR}
 		)
 	</insert>
-	<insert id="insertSelective" parameterType="com.lm.busi.model.Subject">
+	<insert id="insertSelective" parameterType="Subject">
 		insert into lm_subject
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -52,7 +53,7 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.lm.busi.model.Subject">
+	<update id="updateByPrimaryKeySelective" parameterType="Subject">
 		update lm_subject
 		<set>
 			<if test="enName != null">
@@ -64,10 +65,77 @@
 		</set>
 		where id = #{id,jdbcType=SMALLINT}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.lm.busi.model.Subject">
+	<update id="updateByPrimaryKey" parameterType="Subject">
 		update lm_subject
 		set en_name = #{enName,jdbcType=VARCHAR},
 		zh_name = #{zhName,jdbcType=VARCHAR}
 		where id = #{id,jdbcType=SMALLINT}
 	</update>
+	
+	<!-- 删除s -->
+    <delete id="deleteByPrimaryKeys" parameterType="map">
+        delete from lm_subject where id in 
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+    </delete>
+	
+    <select id="listModelsByModel" parameterType="Subject" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from lm_subject 
+        <where>
+            <if test="fuzzyWord!=null">
+                and (en_name like "%"#{fuzzyWord}"%"
+                    or zh_name like "%"#{fuzzyWord}"%")
+            </if>
+        </where>
+    </select>
+    
+    <select id="listModelsByMap" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from lm_subject 
+        <where>
+            <if test="fuzzyWord!=null">
+                and (en_name like "%"#{fuzzyWord}"%"
+                    or zh_name like "%"#{fuzzyWord}"%")
+            </if>
+        </where>
+    </select>
+    
+    <select id="listMapsByModel" parameterType="Subject" resultType="map">
+       select ${columns_select} from lm_subject s
+       <where>
+           
+       </where>
+    </select>
+    
+    <!-- 获取传入的一些列来list -->
+    <select id="listMapsByMap" parameterType="map" resultType="map">
+        select ${columns_select} from lm_subject s
+        <if test="userId != null">
+            inner join lm_user_subject us on s.id=us.subject_id 
+            and us.user_id = #{userId}
+        </if>
+        <where>
+            <if test="fuzzyWord!=null">
+                and (en_name like "%"#{fuzzyWord}"%"
+                    or zh_name like "%"#{fuzzyWord}"%")
+            </if>
+        </where>
+    </select>
+    
+    <!-- 根据传入某个参数，来计数 -->
+    <select id="countSelectedProperty" parameterType="Subject" resultType="java.lang.Integer">
+       select count(*) from lm_subject s 
+       <where>
+           <if test="enName != null">
+               and s.en_name = #{enName,jdbcType=VARCHAR}
+           </if>
+           <if test="zhName != null">
+               and s.zh_name = #{zhName,jdbcType=VARCHAR}
+           </if>
+       </where>
+    </select>
 </mapper>

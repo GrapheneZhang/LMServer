@@ -11,6 +11,7 @@ public interface SubjectMapper {
     int insertSelective(Subject record);
     
     int deleteByPrimaryKey(Short id);
+    int deleteByPrimaryKeys(Map<String, Object> map);
 
     int updateByPrimaryKeySelective(Subject record);
     int updateByPrimaryKey(Subject record);

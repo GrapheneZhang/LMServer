@@ -1,4 +1,4 @@
-package com.lm.sys.action;
+package com.lm.busi.action;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,59 +10,53 @@ import javax.servlet.http.HttpServletRequest;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.lm.base.ToJSPException;
-import com.lm.sys.model.Role;
-import com.lm.sys.service.PrivilegeService;
-import com.lm.sys.service.RoleService;
+import com.lm.busi.model.LMUser;
+import com.lm.busi.service.LMUserService;
+import com.lm.busi.service.SubjectService;
+import com.lm.busi.service.impl.LMUserServiceImpl;
 import com.lm.utils.ProcessUtil;
 
-/**
- * @Description: 角色相关操作
- * @author zyx
- * @date 2015年8月20日 下午2:53:42
- */
-@RequestMapping(value="/role",method = { RequestMethod.GET, RequestMethod.POST })
+@RequestMapping(value="/lmuser",method = { RequestMethod.GET, RequestMethod.POST })
 @Controller
-public class RoleAction{
+public class LMUserAction {
     
-    private static final String JSP_PREFIX="/WEB-INF/jsp/sys/role";//Role前缀
-    private static final Logger LOGGER=Logger.getLogger(RoleAction.class);//日志
+    private static final Logger LOGGER=Logger.getLogger(LMUserAction.class);//日志
+
+    protected static final String JSP_PREFIX="/WEB-INF/jsp/busi/lmuser";//通用的jsp前缀
     
     @Resource
-    private RoleService roleService;
+    private LMUserService lMUserService;
     @Resource
-    private PrivilegeService privilegeService;
+    private SubjectService subjectService;
+
+    private JSONObject resultJson=null;//结果JSON，使用时先new
     
-    /**
-     * 结果JSON，使用时先new
-     */
-    private JSONObject resultJson=null;
-  
     
     /*********************Business Process***************************/
+
     /**
-     * 1 代表此角色
+     * 1 代表此雷鸣用户
      * 跳转到list页面
      */
     @RequestMapping("/query")
     public String list() throws ToJSPException{
         try {
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("跳转到角色页面");
+            String errorMsg=ProcessUtil.formatErrMsg("跳转到雷鸣用户页面");
             LOGGER.error(errorMsg, e);
             throw new ToJSPException(errorMsg);
         }
         return JSP_PREFIX+"/list";
     }
-    
     
     /**
      * 2.1 列表页面数据填充
@@ -77,28 +71,27 @@ public class RoleAction{
             //查询条件
             Map<String,Object> map=new HashMap<String,Object>();
             map.put("fuzzyWord", fuzzyWord);
-            List<Role> list=null;//结果list
+            List<LMUser> list=null;//结果list
             //查询数据库
             if (null==page||null==rows) {//全量查询
-                list=roleService.listForCRUD(map);
+                list=lMUserService.listForCRUD(map);
             }else{//手写分页查询
                 map.put("offset", (page-1)*rows);
                 map.put("limit", rows);
-                list=roleService.listForCRUD(map);
-                resultJson.put("total", roleService.listForCRUDCount(map));
+                list=lMUserService.listForCRUD(map);
+                resultJson.put("total", lMUserService.listForCRUDCount(map));
             }
             //结果处理
-            List<Map<String, Object>> resultList=ProcessUtil.formatRoleList2ArrayList(list);
+            List<Map<String, Object>> resultList=LMUserServiceImpl.formatLMUserList2ArrayList(list);
             
             resultJson.put("rows", resultList);//结果返回
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("查询角色列表");
+            String errorMsg=ProcessUtil.formatErrMsg("查询雷鸣用户列表");
             LOGGER.error(errorMsg, e);
             return ProcessUtil.returnError(500, errorMsg);
         }
         return ProcessUtil.returnCorrect(resultJson);
     }
-
     
     /**
      * 3.1 跳转到add页面
@@ -108,10 +101,10 @@ public class RoleAction{
         ModelAndView mav=new ModelAndView(JSP_PREFIX+"/add");
         try {
             JSONArray jsonArray=new JSONArray();
-            jsonArray.addAll(privilegeService.listForZtree());
+            jsonArray.addAll(subjectService.listForZtree());
             mav.addObject("list",jsonArray);
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("跳转到角色增加页面");
+            String errorMsg=ProcessUtil.formatErrMsg("跳转到雷鸣用户增加页面");
             LOGGER.error(errorMsg, e);
             throw new ToJSPException(errorMsg);
         }
@@ -124,12 +117,12 @@ public class RoleAction{
      */
     @RequestMapping(value="/add")
     @ResponseBody
-    public JSONObject add(Role record,Integer... pIds){
+    public JSONObject add(LMUser record,Short... sIds){
         resultJson=new JSONObject();
         try {
-            roleService.insert(record,pIds);
+            lMUserService.insert(record,sIds);
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("增加一个角色");
+            String errorMsg=ProcessUtil.formatErrMsg("增加一个雷鸣用户");
             LOGGER.error(errorMsg, e);
             return ProcessUtil.returnError(500, errorMsg);
         }
@@ -144,14 +137,12 @@ public class RoleAction{
      */
     @RequestMapping(value="/delete")
     @ResponseBody
-    public JSONObject delete(Integer... ids){
+    public JSONObject delete(Long... ids){
         resultJson=new JSONObject();
         try {
-            if (ids.length>0) {
-                roleService.deleteByPrimaryKeys(ids);
-            }
+            lMUserService.deleteByPrimaryKeys(ids);
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("删除角色");
+            String errorMsg=ProcessUtil.formatErrMsg("删除雷鸣用户");
             LOGGER.error(errorMsg, e);
             return ProcessUtil.returnError(500, errorMsg);
         }
@@ -162,27 +153,27 @@ public class RoleAction{
      * 5.1 跳转到update页面
      */
     @RequestMapping("/query/updateUI")
-    public ModelAndView updateUI(Integer id) throws ToJSPException{
+    public ModelAndView updateUI(Long id) throws ToJSPException{
         ModelAndView mav=new ModelAndView(JSP_PREFIX+"/update");
         try {
-            //角色
-            Role record=roleService.selectByPrimaryKey(id);
-            Map<String,Object> resultMap=privilegeService.listPrivilegesByRoleId(id);
+            //雷鸣用户
+            LMUser record=lMUserService.selectByPrimaryKey(id);
+            Map<String,Object> resultMap=subjectService.listByUserId(id);
             //查询出角色的权限列表
             @SuppressWarnings("unchecked")
-            List<Map<String, Object>> pList=(List<Map<String, Object>>)resultMap.get("listAllWithChkSign");
+            List<Map<String, Object>> sList=(List<Map<String, Object>>)resultMap.get("listAllWithChkSign");
             
             
             //将pList放入放回结果
             JSONArray jsonArray=new JSONArray();
-            jsonArray.addAll(pList);
+            jsonArray.addAll(sList);
             
-            mav.addObject("pIds", resultMap.get("pIds"));
-            mav.addObject("pNames", resultMap.get("pNames"));
+            mav.addObject("sIds", resultMap.get("sIds"));
+            mav.addObject("sZhNames", resultMap.get("sZhNames"));
             mav.addObject("list", jsonArray);
-            mav.addObject("role", record);//结果返回
+            mav.addObject("lmUser", record);//结果返回
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("跳转到角色修改页面");
+            String errorMsg=ProcessUtil.formatErrMsg("跳转到雷鸣用户修改页面");
             LOGGER.error(errorMsg, e);
             throw new ToJSPException(errorMsg);
         }
@@ -194,12 +185,12 @@ public class RoleAction{
      */
     @RequestMapping(value="/update")
     @ResponseBody
-    public JSONObject update(Role record,Integer... pIds){
+    public JSONObject update(LMUser record,Short... sIds){
         resultJson=new JSONObject();
         try {
-            roleService.updateByPrimaryKeySelective(record,pIds);
+            lMUserService.updateByPrimaryKeySelective(record,sIds);
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("修改一个角色");
+            String errorMsg=ProcessUtil.formatErrMsg("修改一个雷鸣用户");
             LOGGER.error(errorMsg, e);
             return ProcessUtil.returnError(500, errorMsg);
         }
@@ -211,15 +202,49 @@ public class RoleAction{
      */
     @RequestMapping(value="/query/check")
     @ResponseBody
-    public boolean check(@RequestParam String name,Integer id){
+    public boolean check(LMUser record,Long id) throws Exception{
+        //只能传递一个值过来
+        String willBeOperatedPro=null;//the chosen one
+        String originalOne=null;//the original one
+        String userName=record.getUserName();
+        String userMac=record.getUserMac();
+        String userProofRule=record.getUserProofRule();
+        
+        int nameCount=0;
+        int macCount=0;
+        int ruleCount=0;
+        if (StringUtils.isNotBlank(userName)) {
+            nameCount=1;
+            willBeOperatedPro=userName;
+            if (null!=id && 0!=id) {//修改的情况
+                originalOne=lMUserService.selectByPrimaryKey(id).getUserName();
+            }
+        }
+        if (StringUtils.isNotBlank(userMac)) {
+            macCount=1;
+            willBeOperatedPro=userMac;
+            if (null!=id && 0!=id) {//修改的情况
+                originalOne=lMUserService.selectByPrimaryKey(id).getUserMac();
+            }
+        }
+        if (StringUtils.isNotBlank(userProofRule)) {
+            ruleCount=1;
+            willBeOperatedPro=userProofRule;
+            if (null!=id && 0!=id) {//修改的情况
+                originalOne=lMUserService.selectByPrimaryKey(id).getUserProofRule();
+            }
+        }
+        
+        //判断
+        if (nameCount+macCount+ruleCount!=1) {
+            throw new Exception("parameter is wrong,please check it");
+        }
+        
         if (null!=id && 0!=id) {//修改的情况
-            String dbName=roleService.selectByPrimaryKey(id).getName();
-            if(name.equals(dbName)){
+            if(willBeOperatedPro.equals(originalOne)){
                 return true;
             }
         }
-        Role record=new Role();
-        record.setName(name);
-        return roleService.checkUnique(record);
+        return lMUserService.checkUnique(record);
     }
 }

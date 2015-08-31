@@ -53,7 +53,7 @@
     <div data-options="region:'south',border:false" style="height:50px;background:#A9FACD;padding:10px;">
 版权所有
     </div>
-    <div data-options="region:'center',title:'Center'">
+    <div data-options="region:'center',title:'数据中心'">
         <div class="easyui-tabs" id="tabs" data-options="fit:true,border:false,plain:true">
         </div>
     </div>

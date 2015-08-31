@@ -32,6 +32,10 @@
         <typeAlias alias="Privilege" type="com.lm.sys.model.Privilege" />
         <typeAlias alias="Role" type="com.lm.sys.model.Role" />
         <typeAlias alias="User" type="com.lm.sys.model.User" />
+        
+        <typeAlias alias="LMUser" type="com.lm.busi.model.LMUser" />
+        <typeAlias alias="Question" type="com.lm.busi.model.Question" />
+        <typeAlias alias="Subject" type="com.lm.busi.model.Subject" />
     </typeAliases>
 
     <!-- 
@@ -69,9 +73,13 @@
 	
 	<!-- 映射文件，存放sql语句的配置文件 -->
     <mappers>
-        <mapper resource="com/lm/sys/dao/mapper/PrivilegeMapper.xml" />
+        <mapper resource="com/lm/sys/dao/mapper/LMUserMapper.xml" />
         <mapper resource="com/lm/sys/dao/mapper/RoleMapper.xml" />
         <mapper resource="com/lm/sys/dao/mapper/UserMapper.xml" />
+        
+        <mapper resource="com/lm/busi/dao/mapper/PrivilegeMapper.xml" />
+        <mapper resource="com/lm/busi/dao/mapper/QuestionMapper.xml" />
+        <mapper resource="com/lm/busi/dao/mapper/SubjectMapper.xml" />
     </mappers>
 
 </configuration> 

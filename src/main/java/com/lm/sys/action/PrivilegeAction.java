@@ -20,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.lm.base.BaseAction;
 import com.lm.base.ToJSPException;
 import com.lm.sys.model.Privilege;
 import com.lm.sys.service.PrivilegeService;
@@ -33,7 +32,7 @@ import com.lm.utils.ProcessUtil;
  */
 @RequestMapping(value="/privilege",method = { RequestMethod.GET, RequestMethod.POST })
 @Controller
-public class PrivilegeAction extends BaseAction {
+public class PrivilegeAction{
     
     private static final String JSP_PREFIX="/WEB-INF/jsp/sys/privilege";//Privilege前缀
     private static final Logger LOGGER=Logger.getLogger(PrivilegeAction.class);//日志

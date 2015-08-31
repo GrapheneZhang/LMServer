@@ -18,8 +18,11 @@ import com.lm.busi.model.Subject;
 @Repository
 public class SubjectDaoImpl extends BaseDao implements SubjectMapper {
     
-    private static final String NAMESPACE="com.lm.busi.model.Subject.";//命名空间
+    private static final String NAMESPACE="com.lm.busi.dao.SubjectMapper.";//命名空间
 
+    
+    /*** 增加 ***/
+    
     @Override
     public int insert(Subject record) {
         return getSqlSession().insert(NAMESPACE+"insert", record);
@@ -29,11 +32,21 @@ public class SubjectDaoImpl extends BaseDao implements SubjectMapper {
         return getSqlSession().insert(NAMESPACE+"insertSelective", record);
     }
 
+    
+    /*** 删除 ***/
+    
     @Override
     public int deleteByPrimaryKey(Short id) {
         return getSqlSession().delete(NAMESPACE+"deleteByPrimaryKey", id);
     }
+    @Override
+    public int deleteByPrimaryKeys(Map<String, Object> map) {
+        return getSqlSession().delete(NAMESPACE+"deleteByPrimaryKeys", map);
+    }
 
+    
+    /*** 修改 ***/
+    
     @Override
     public int updateByPrimaryKeySelective(Subject record) {
         return getSqlSession().update(NAMESPACE+"updateByPrimaryKeySelective", record);
@@ -43,6 +56,9 @@ public class SubjectDaoImpl extends BaseDao implements SubjectMapper {
         return getSqlSession().update(NAMESPACE+"updateByPrimaryKey", record);
     }
 
+    
+    /*** 单个查询 ***/
+    
     @Override
     public Subject selectByPrimaryKey(Short id) {
         return getSqlSession().selectOne(NAMESPACE+"selectByPrimaryKey", id);
@@ -52,6 +68,9 @@ public class SubjectDaoImpl extends BaseDao implements SubjectMapper {
         return getSqlSession().selectOne(NAMESPACE+"countSelectedProperty", record);
     }
 
+    
+    /*** 列表查询 ***/
+    
     @Override
     public List<Subject> listModels(Subject record) {
         return getSqlSession().selectList(NAMESPACE+"listModelsByModel", record);

@@ -1,5 +1,7 @@
 package com.lm.busi.model;
 
+import java.util.List;
+
 public class LMUser {
     private Long id;
 
@@ -10,6 +12,8 @@ public class LMUser {
     private String userProofRule;
 
     private Boolean isActive;
+    
+    private List<Subject> subjectList;
 
     public Long getId() {
         return id;
@@ -49,5 +53,13 @@ public class LMUser {
 
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
+    }
+
+    public List<Subject> getSubjectList() {
+        return subjectList;
+    }
+
+    public void setSubjectList(List<Subject> subjectList) {
+        this.subjectList = subjectList;
     }
 }

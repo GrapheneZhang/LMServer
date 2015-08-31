@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.lm.busi.dao.LMUserMapper">
-	<resultMap id="BaseResultMap" type="com.lm.busi.model.LMUser">
+
+	<resultMap id="BaseResultMap" type="LMUser">
 		<id column="id" property="id" jdbcType="BIGINT" />
 		<result column="user_name" property="userName" jdbcType="VARCHAR" />
 		<result column="user_mac" property="userMac" jdbcType="VARCHAR" />
-		<result column="user_proof_rule" property="userProofRule"
-			jdbcType="VARCHAR" />
+		<result column="user_proof_rule" property="userProofRule" jdbcType="VARCHAR" />
 		<result column="is_active" property="isActive" jdbcType="BIT" />
 	</resultMap>
+	
+    <resultMap id="detailUserResult" type="LMUser">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="user_mac" property="userMac" jdbcType="VARCHAR" />
+        <result column="user_proof_rule" property="userProofRule" jdbcType="VARCHAR" />
+        <result column="is_active" property="isActive" jdbcType="BIT" />
+        <collection property="subjectList" ofType="Subject" >
+            <id property="id" column="id"/>
+            <result property="enName" column="en_name"/>
+            <result property="zhName" column="zh_name"/>
+        </collection>
+    </resultMap>
+	
+	
 	<sql id="Base_Column_List">
 		id, user_name, user_mac, user_proof_rule, is_active
 	</sql>
@@ -23,14 +38,14 @@
 		delete from lm_user
 		where id = #{id,jdbcType=BIGINT}
 	</delete>
-	<insert id="insert" parameterType="com.lm.busi.model.LMUser">
+	<insert id="insert" parameterType="com.lm.busi.model.LMUser" keyProperty="id">
 		insert into lm_user (id, user_name, user_mac,
 		user_proof_rule, is_active)
 		values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR},
 		#{userMac,jdbcType=VARCHAR},
 		#{userProofRule,jdbcType=VARCHAR}, #{isActive,jdbcType=BIT})
 	</insert>
-	<insert id="insertSelective" parameterType="com.lm.busi.model.LMUser">
+	<insert id="insertSelective" parameterType="com.lm.busi.model.LMUser" keyProperty="id">
 		insert into lm_user
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -93,4 +108,83 @@
 		is_active = #{isActive,jdbcType=BIT}
 		where id = #{id,jdbcType=BIGINT}
 	</update>
+	
+	<!-- 插入lm_user_subject表 -->
+	<insert id="insertUserSubject" parameterType="map">
+	   insert into lm_user_subject(user_id,subject_id) values 
+       <foreach collection="sIds" item="sId" separator=",">
+          (#{userId},#{sId})
+       </foreach>
+	</insert>
+	
+    <!-- 删除 -->
+    <delete id="deleteByPrimaryKeys" parameterType="map">
+        delete from lm_user where id in 
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+    </delete>
+    <!-- 单独删除关系表 -->
+    <delete id="deleteUserSubject" parameterType="java.lang.Long">
+        delete from lm_user_subject where user_id = #{userId,jdbcType=INTEGER}
+    </delete>
+    
+    <!-- 由于使用了Mybatis的集合嵌套结果Nested Results for Collection只能手写分页 -->
+    <select id="listModelsByMap" parameterType="map" resultMap="detailUserResult">
+        select 
+            u.id as id,
+            u.user_name as user_name,
+            u.user_mac as user_mac,
+            u.user_proof_rule as user_proof_rule,
+            u.is_active as is_active,
+            s.id as s_id,
+            s.en_name as en_name,
+            s.zh_name as zh_name
+        from 
+            (
+                (
+                select * from lm_user 
+                    <where>
+                        <if test="fuzzyWord!=null">
+                            and (user_name like "%"#{fuzzyWord}"%"
+                                or user_mac like "%"#{fuzzyWord}"%"
+                                or user_proof_rule like "%"#{fuzzyWord}"%")
+                        </if>
+                    </where>
+                    <if test="offset != null and limit != null">
+                        limit #{offset},#{limit}
+                    </if>
+                ) u
+                left join lm_user_subject us on u.id = us.user_id 
+                left join lm_subject s on us.subject_id = s.id
+            )
+    </select>
+    <!-- 上面主语句(r)的总数 -->
+    <select id="listModelsByMap_count" parameterType="map" resultType="java.lang.Integer">
+         select count(*) from lm_user 
+         <where>
+             <if test="fuzzyWord!=null">
+                 and (user_name like "%"#{fuzzyWord}"%"
+                     or user_mac like "%"#{fuzzyWord}"%"
+                     or user_proof_rule like "%"#{fuzzyWord}"%")
+             </if>
+         </where>
+    </select>
+    
+    <!-- 根据传入某个参数，来计数 -->
+    <select id="countSelectedProperty" parameterType="LMUser" resultType="java.lang.Integer">
+       select count(*) from lm_user u 
+       <where>
+           <if test="userName != null">
+               and u.user_name = #{userName,jdbcType=VARCHAR}
+           </if>
+           <if test="userMac != null">
+               and u.user_mac = #{userMac,jdbcType=VARCHAR}
+           </if>
+           <if test="userProofRule != null">
+               and u.user_proof_rule = #{userProofRule,jdbcType=VARCHAR}
+           </if>
+       </where>
+    </select>
+    
 </mapper>

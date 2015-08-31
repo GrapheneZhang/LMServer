@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.lm.base.BaseAction;
 import com.lm.base.ToJSPException;
 import com.lm.sys.model.User;
 import com.lm.sys.service.PrivilegeService;
@@ -34,7 +33,10 @@ import com.lm.utils.ProcessUtil;
  */
 @RequestMapping(method = { RequestMethod.GET, RequestMethod.POST })
 @Controller("systemUser")
-public class UserAction extends BaseAction{
+public class UserAction{
+    
+    protected static final String JSP_PREFIX="/WEB-INF/jsp";//通用的jsp前缀
+    protected static final String JSP_PREFIX_USER="/WEB-INF/jsp/sys/user";//USER前缀
     
     private static final Logger LOGGER=Logger.getLogger(UserAction.class);//日志
     @Resource
