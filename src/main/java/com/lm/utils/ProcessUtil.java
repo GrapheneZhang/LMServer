@@ -36,6 +36,18 @@ public class ProcessUtil {
     }
     
     /**
+     * @Title: returnLMCorrect 
+     * @Description: LM正确返回
+     * @param json
+     * @return
+     * @throws
+     */
+    public static JSONObject returnLMCorrect(JSONObject json){
+        json.put("state", 1);
+        return json;
+    }
+    
+    /**
      * @Title: returnError 
      * @Description: 错误返回
      * @param errorMsg

@@ -102,12 +102,14 @@ public class SubjectServiceImpl implements SubjectService {
         //需要得到选中subject的ids和names
         String sIds="";
         String sZhNames="";
+        String sEnNames="";
         
         //将选中的标识到全部中
         for (int i = 0; i < listSelected.size(); i++) {
             Map<String,Object> checked=listSelected.get(i);
             sIds+=checked.get("id")+",";
             sZhNames+=checked.get("zhName")+",";
+            sEnNames+=checked.get("enName")+",";
             for (int j = 0; j < listAll.size(); j++) {
                 Map<String ,Object> item=listAll.get(j);
                 if((Integer)checked.get("id")==(Integer)item.get("id")){
@@ -120,6 +122,7 @@ public class SubjectServiceImpl implements SubjectService {
         if (listSelected.size()>0) {
             sIds=sIds.substring(0, sIds.length()-1);
             sZhNames=sZhNames.substring(0, sZhNames.length()-1);
+            sEnNames=sEnNames.substring(0, sEnNames.length()-1);
         }
         
         //构造返回结果
@@ -127,8 +130,8 @@ public class SubjectServiceImpl implements SubjectService {
         map.put("listAllWithChkSign", listAll);
         map.put("sIds", sIds);
         map.put("sZhNames", sZhNames);
+        map.put("sEnNames", sEnNames);
        
         return map;
     }
-
 }

@@ -181,6 +181,18 @@ public class LMUserServiceImpl implements LMUserService {
     /*************************** 服务 ******************************/
     @Override
     public LMUser serviceLogin(LMUser record) {
+        record.setIsActive(true);
         return lMUserMapper.selectBy4Property(record);
+    }
+    
+    @Override
+    public LMUser servicePermitSignUp(LMUser record) {
+        record.setIsActive(false);
+        return lMUserMapper.selectBy4Property(record);
+    }
+
+    @Override
+    public int serviceSignUp(LMUser record) {
+        return lMUserMapper.updateByPrimaryKeySelective(record);
     }
 }

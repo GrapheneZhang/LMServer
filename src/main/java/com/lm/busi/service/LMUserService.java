@@ -20,4 +20,8 @@ public interface LMUserService {
     
     /********************* 服务 ************************/
     LMUser serviceLogin(LMUser record);
+
+    LMUser servicePermitSignUp(LMUser record);
+    
+    int serviceSignUp(LMUser record);
 }

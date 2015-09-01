@@ -193,7 +193,9 @@
             u.user_name = #{userName,jdbcType=VARCHAR} 
             and u.user_mac = #{userMac,jdbcType=VARCHAR}
             and u.user_proof_rule = #{userProofRule,jdbcType=VARCHAR}
-            and u.is_active = 1
+            <if test="isActive != null">
+                and u.is_active = #{isActive,jdbcType=BIT}
+            </if>
     </select>
     
 </mapper>

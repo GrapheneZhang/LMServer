@@ -27,11 +27,11 @@ import com.lm.utils.ProcessUtil;
 
 @RequestMapping(method = { RequestMethod.GET, RequestMethod.POST })
 @Controller
-public class LMUserAction {
+public class SubjectAction {
     
-    private static final Logger LOGGER=Logger.getLogger(LMUserAction.class);//日志
-    private static final String URL_PREFIX="/lmuser";
-    protected static final String JSP_PREFIX="/WEB-INF/jsp/busi/lmuser";//通用的jsp前缀
+    private static final Logger LOGGER=Logger.getLogger(SubjectAction.class);//日志
+    private static final String URL_PREFIX="/subject";
+    protected static final String JSP_PREFIX="/WEB-INF/jsp/busi/subject";//通用的jsp前缀
     
     @Resource
     private LMUserService lMUserService;
@@ -44,14 +44,14 @@ public class LMUserAction {
     /*********************System Process***************************/
 
     /**
-     * 1 代表此雷鸣用户
+     * 1 代表此科目
      * 跳转到list页面
      */
     @RequestMapping(URL_PREFIX+"/query")
     public String list() throws ToJSPException{
         try {
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("跳转到雷鸣用户页面");
+            String errorMsg=ProcessUtil.formatErrMsg("跳转到科目页面");
             LOGGER.error(errorMsg, e);
             throw new ToJSPException(errorMsg);
         }
@@ -86,7 +86,7 @@ public class LMUserAction {
             
             resultJson.put("rows", resultList);//结果返回
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("查询雷鸣用户列表");
+            String errorMsg=ProcessUtil.formatErrMsg("查询科目列表");
             LOGGER.error(errorMsg, e);
             return ProcessUtil.returnError(500, errorMsg);
         }
@@ -104,7 +104,7 @@ public class LMUserAction {
             jsonArray.addAll(subjectService.listForZtree());
             mav.addObject("list",jsonArray);
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("跳转到雷鸣用户增加页面");
+            String errorMsg=ProcessUtil.formatErrMsg("跳转到科目增加页面");
             LOGGER.error(errorMsg, e);
             throw new ToJSPException(errorMsg);
         }
@@ -122,7 +122,7 @@ public class LMUserAction {
         try {
             lMUserService.insert(record,sIds);
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("增加一个雷鸣用户");
+            String errorMsg=ProcessUtil.formatErrMsg("增加一个科目");
             LOGGER.error(errorMsg, e);
             return ProcessUtil.returnError(500, errorMsg);
         }
@@ -142,7 +142,7 @@ public class LMUserAction {
         try {
             lMUserService.deleteByPrimaryKeys(ids);
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("删除雷鸣用户");
+            String errorMsg=ProcessUtil.formatErrMsg("删除科目");
             LOGGER.error(errorMsg, e);
             return ProcessUtil.returnError(500, errorMsg);
         }
@@ -156,7 +156,7 @@ public class LMUserAction {
     public ModelAndView updateUI(Long id) throws ToJSPException{
         ModelAndView mav=new ModelAndView(JSP_PREFIX+"/update");
         try {
-            //雷鸣用户
+            //科目
             LMUser record=lMUserService.selectByPrimaryKey(id);
             Map<String,Object> resultMap=subjectService.listByUserId(id);
             //查询出角色的权限列表
@@ -173,7 +173,7 @@ public class LMUserAction {
             mav.addObject("list", jsonArray);
             mav.addObject("lmUser", record);//结果返回
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("跳转到雷鸣用户修改页面");
+            String errorMsg=ProcessUtil.formatErrMsg("跳转到科目修改页面");
             LOGGER.error(errorMsg, e);
             throw new ToJSPException(errorMsg);
         }
@@ -190,7 +190,7 @@ public class LMUserAction {
         try {
             lMUserService.updateByPrimaryKeySelective(record,sIds);
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("修改一个雷鸣用户");
+            String errorMsg=ProcessUtil.formatErrMsg("修改一个科目");
             LOGGER.error(errorMsg, e);
             return ProcessUtil.returnError(500, errorMsg);
         }
