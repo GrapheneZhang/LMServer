@@ -142,29 +142,45 @@ public class LMUserServiceImpl implements LMUserService {
             ProcessUtil.beanToMap(item, tempMap);//转Map
             
             //对权限进行字符串化处理
+            String sIds="";
+            String sEnNames="";
+            String sZhNames="";
+            next:
             if(tempMap.containsKey("subjectList")){
                 @SuppressWarnings("unchecked")
                 List<Subject> sList=(List<Subject>)tempMap.get("subjectList");
-                String sIds="";
-                String sEnNames="";
-                String sZhNames="";
+                if(sList.size()<1){
+                    tempMap.remove("subjectList");
+                    break next;
+                }
                 for (int j = 0; j < sList.size(); j++) {
                     Subject sub=sList.get(j);
                     sIds+=sub.getId()+",";
                     sEnNames+=sub.getEnName()+",";
                     sZhNames+=sub.getZhName()+",";
                 }
-                tempMap.put("sIds",sIds.substring(0, sIds.length()-1));
-                tempMap.put("sEnNames",sEnNames.substring(0, sEnNames.length()-1));
-                tempMap.put("sZhNames",sZhNames.substring(0, sZhNames.length()-1));
+                sIds=sIds.substring(0, sIds.length()-1);
+                sEnNames=sEnNames.substring(0, sEnNames.length()-1);
+                sZhNames=sZhNames.substring(0, sZhNames.length()-1);
                 
                 //清除subjectList列
                 tempMap.remove("subjectList");
             }
+            //设置上面生成的字符串描述
+            tempMap.put("sIds",sIds);
+            tempMap.put("sEnNames",sEnNames);
+            tempMap.put("sZhNames",sZhNames);
             
             //返回
             resultList.add(tempMap);
         }
         return resultList;
+    }
+
+    
+    /*************************** 服务 ******************************/
+    @Override
+    public LMUser serviceLogin(LMUser record) {
+        return lMUserMapper.selectBy4Property(record);
     }
 }

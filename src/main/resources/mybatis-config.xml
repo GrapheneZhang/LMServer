@@ -73,11 +73,11 @@
 	
 	<!-- 映射文件，存放sql语句的配置文件 -->
     <mappers>
-        <mapper resource="com/lm/sys/dao/mapper/LMUserMapper.xml" />
+        <mapper resource="com/lm/sys/dao/mapper/PrivilegeMapper.xml" />
         <mapper resource="com/lm/sys/dao/mapper/RoleMapper.xml" />
         <mapper resource="com/lm/sys/dao/mapper/UserMapper.xml" />
         
-        <mapper resource="com/lm/busi/dao/mapper/PrivilegeMapper.xml" />
+        <mapper resource="com/lm/busi/dao/mapper/LMUserMapper.xml" />
         <mapper resource="com/lm/busi/dao/mapper/QuestionMapper.xml" />
         <mapper resource="com/lm/busi/dao/mapper/SubjectMapper.xml" />
     </mappers>

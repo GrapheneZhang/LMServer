@@ -17,7 +17,7 @@
         <result column="user_proof_rule" property="userProofRule" jdbcType="VARCHAR" />
         <result column="is_active" property="isActive" jdbcType="BIT" />
         <collection property="subjectList" ofType="Subject" >
-            <id property="id" column="id"/>
+            <id property="id" column="s_id"/>
             <result property="enName" column="en_name"/>
             <result property="zhName" column="zh_name"/>
         </collection>
@@ -185,6 +185,15 @@
                and u.user_proof_rule = #{userProofRule,jdbcType=VARCHAR}
            </if>
        </where>
+    </select>
+    
+    <!-- 服务 -->
+    <select id="selectBy4Property" parameterType="LMUser" resultMap="BaseResultMap">
+        select * from lm_user u where 
+            u.user_name = #{userName,jdbcType=VARCHAR} 
+            and u.user_mac = #{userMac,jdbcType=VARCHAR}
+            and u.user_proof_rule = #{userProofRule,jdbcType=VARCHAR}
+            and u.is_active = 1
     </select>
     
 </mapper>

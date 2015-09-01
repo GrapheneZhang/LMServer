@@ -18,20 +18,19 @@ var setting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: "id",
-            rootPId: null
+            idKey: "id"
         }
     }, callback: {
     	onCheck: function(event,treeId,treeNode){
     		var nodes = treeObj.getCheckedNodes(true);
-    		var rIds="";
-    		var rNames="";
+    		var sIds="";
+    		var sZhNames="";
     		for (var i = 0; i < nodes.length; i++) {
-                rIds+=nodes[i].id+",";
-                rNames+=nodes[i].name+",";
+    			sIds+=nodes[i].id+",";
+    			sZhNames+=nodes[i].zhName+",";
             }
-    		$("#rIds").val(rIds.substring(0,rIds.length-1));
-            $("#rNames").val(rNames.substring(0,rNames.length-1));
+    		$("#sIds").val(sIds.substring(0,sIds.length-1));
+            $("#sZhNames").val(sZhNames.substring(0,sZhNames.length-1));
         }
     }
 };
@@ -41,35 +40,36 @@ $(function(){
         rules:{
             userName:{
                 required:true,
+                mobilePhone:true,
                 remote:{
-                    url:"${pageContext.request.contextPath}/user/query/check",
+                    url:"${pageContext.request.contextPath}/lmuser/query/check",
                     type:"post",
                     data:{id:$("#id").val()}
                 }
             },
-            realName:{
-                required:true,
-                maxlength:50
+            userMac:{
+                remote:{
+                    url:"${pageContext.request.contextPath}/lmuser/query/check",
+                    type:"post",
+                    data:{id:$("#id").val()}
+                }
             },
-            password:{
-                required:true,
-                maxlength:50,
-                equalTo:password2
-            },
-            password2:{
-                required:true,
-                maxlength:50,
-                equalTo:password
-            },
-            mobileNo:{
-                mobilePhone:true
-            },
-            email:{
-                myEmail:true
+            userProofRule:{
+                remote:{
+                    url:"${pageContext.request.contextPath}/lmuser/query/check",
+                    type:"post",
+                    data:{id:$("#id").val()}
+                }
             }
         }, messages: {
-            name:{
-                remote:"此角色名已存在,请重新输入!"
+        	userName:{
+                remote:"此用户名已存在,请重新输入!"
+            },
+            userMac:{
+                remote:"此用户MAC地址已存在,请重新输入!"
+            },
+            userProofRule:{
+                remote:"此用户令牌已存在,请重新输入!"
             }
         }, submitHandler:function(form){
         	$(form).ajaxSubmit({
@@ -87,14 +87,14 @@ $(function(){
     });
     
     //选择父权限
-    $("#pickRole").click(function(){
-    	treeObj=$.fn.zTree.init($("#roleTree"), setting, treeNode);
+    $("#pick").click(function(){
+    	treeObj=$.fn.zTree.init($("#thisTree"), setting, treeNode);
     });
     
 });
 </script>
 <!-- 新增页面 -->
-<sp:form id="form" method="post" commandName="user" action="${pageContext.request.contextPath}/user/update">
+<sp:form id="form" method="post" commandName="lmUser" action="${pageContext.request.contextPath}/lmuser/update">
     <table>
         <tr>
             <td>用户名:</td>
@@ -104,42 +104,31 @@ $(function(){
             </td>
         </tr>
         <tr>
-            <td>真实姓名:</td>
+            <td>用户MAC地址:</td>
             <td>
-                <sp:input type="text" path="realName" id="realName" />
+                <sp:textarea path="userMac" id="userMac"></sp:textarea>
             </td>
         </tr>
         <tr>
-            <td>密码:</td>
+            <td>令牌:</td>
             <td>
-                <input type="password" name="password" id="password" />
+                <sp:textarea path="userProofRule" id="userProofRule"></sp:textarea>
             </td>
         </tr>
         <tr>
-            <td>重复密码:</td>
+            <td>选择科目：</td>
             <td>
-                <input type="password" id="password2" />
+                <textarea id="sZhNames" readonly="readonly">${sZhNames}</textarea>
+                <input type="hidden" name="sIds" id="sIds" value="${sIds}" />
+                <input type="button" id="pick" value="选择" />
+                <ul id="thisTree" class="ztree"></ul>
             </td>
         </tr>
         <tr>
-            <td>分配角色：</td>
+            <td>是否可用:</td>
             <td>
-                <textarea id="rNames" readonly="readonly">${rNames}</textarea>
-                <input type="hidden" name="rIds" id="rIds" value="${rIds}" />
-                <input type="button" id="pickRole" value="选择" />
-                <ul id="roleTree" class="ztree"></ul>
-            </td>
-        </tr>
-        <tr>
-            <td>电话号码:</td>
-            <td>
-                <sp:input type="text" path="mobileNo" id="mobileNo" />
-            </td>
-        </tr>
-        <tr>
-            <td>电子邮箱:</td>
-            <td>
-                <sp:input type="text" path="email" id="email" />
+                <sp:radiobutton path="isActive" id="isActive0" value="0" />否
+                <sp:radiobutton path="isActive" id="isActive1" value="1" />是
             </td>
         </tr>
     </table>

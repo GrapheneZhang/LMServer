@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50168
 File Encoding         : 65001
 
-Date: 2015-08-30 01:16:21
+Date: 2015-09-01 17:06:26
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -43,7 +43,7 @@ CREATE TABLE `lm_subject` (
   `en_name` varchar(255) NOT NULL DEFAULT '' COMMENT '英文科目名',
   `zh_name` varchar(255) NOT NULL DEFAULT '' COMMENT '中文科目名',
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `UNIQUE_NAME` (`en_name`, `zh_name`)
+  UNIQUE KEY `UNIQUE_NAME` (`en_name`,`zh_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -61,12 +61,14 @@ CREATE TABLE `lm_user` (
   `user_proof_rule` varchar(80) DEFAULT '' COMMENT '用户令牌',
   `is_active` bit(1) DEFAULT b'0' COMMENT '是否激活，0位激活，1已激活',
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `UNIQUE_USERNAME` (`user_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  UNIQUE KEY `UNIQUE_NAME_MAC_PROOF` (`user_name`,`user_mac`,`user_proof_rule`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of lm_user
 -- ----------------------------
+INSERT INTO `lm_user` VALUES ('1', '18515012319', 'sdfasd', 'sdfsdf', '\0');
+INSERT INTO `lm_user` VALUES ('2', '18515012320', 'ssdf11', 'sdfsdfs11', '');
 
 -- ----------------------------
 -- Table structure for lm_user_subject
@@ -102,7 +104,7 @@ CREATE TABLE `sys_privilege` (
   PRIMARY KEY (`id`),
   KEY `FK_PRIVILEGE_PARENTID_ID` (`parent_id`),
   CONSTRAINT `FK_PRIVILEGE_PARENTID_ID` FOREIGN KEY (`parent_id`) REFERENCES `sys_privilege` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_privilege
@@ -120,6 +122,8 @@ INSERT INTO `sys_privilege` VALUES ('10', '角色_修改', '/lm/role/update', '3
 INSERT INTO `sys_privilege` VALUES ('11', '权限_新增', '/lm/privilege/add', '4', '\0', '/lm/js/widget/zTree3.5/img/diy/3.png', '权限_新增', '2015-08-20 00:01:01', '2015-08-20 00:01:01');
 INSERT INTO `sys_privilege` VALUES ('12', '权限_删除', '/lm/privilege/delete', '4', '\0', '/lm/js/widget/zTree3.5/img/diy/3.png', '权限_删除', '2015-08-20 00:01:01', '2015-08-20 00:01:01');
 INSERT INTO `sys_privilege` VALUES ('13', '权限_修改', '/lm/privilege/update', '4', '\0', '/lm/js/widget/zTree3.5/img/diy/3.png', '权限_修改', '2015-08-20 00:01:01', '2015-08-20 00:01:01');
+INSERT INTO `sys_privilege` VALUES ('14', '雷鸣管理', '', null, '', '/lm/js/widget/zTree3.5/img/diy/1_close.png', '雷鸣管理', '2015-09-01 09:59:05', '2015-09-01 10:07:22');
+INSERT INTO `sys_privilege` VALUES ('15', '雷鸣用户管理', '/lm/lmuser/query', '14', '', '/lm/js/widget/zTree3.5/img/diy/1_close.png', '', '2015-09-01 10:07:15', '2015-09-01 10:07:15');
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -132,12 +136,13 @@ CREATE TABLE `sys_role` (
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
 INSERT INTO `sys_role` VALUES ('1', '超级管理员', '这是有最高权限的超级管理员', '2015-08-20 00:01:01', '2015-08-20 00:01:01');
+INSERT INTO `sys_role` VALUES ('2', '雷鸣管理员', '', '2015-09-01 09:59:30', '2015-09-01 10:07:47');
 
 -- ----------------------------
 -- Table structure for sys_role_privilege
@@ -168,6 +173,8 @@ INSERT INTO `sys_role_privilege` VALUES ('1', '10');
 INSERT INTO `sys_role_privilege` VALUES ('1', '11');
 INSERT INTO `sys_role_privilege` VALUES ('1', '12');
 INSERT INTO `sys_role_privilege` VALUES ('1', '13');
+INSERT INTO `sys_role_privilege` VALUES ('2', '14');
+INSERT INTO `sys_role_privilege` VALUES ('2', '15');
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -184,12 +191,12 @@ CREATE TABLE `sys_user` (
   `update_time` datetime NOT NULL COMMENT '更新时间',
   `login_count` bigint(20) NOT NULL DEFAULT '0' COMMENT '登陆次数',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES ('1', 'admin', '张三', 'admin', '13113112312', '12345@qq.com', '2015-08-20 00:01:01', '2015-08-20 00:01:01', '1');
+INSERT INTO `sys_user` VALUES ('1', 'admin', '张三', 'admin', '13113112312', '12345@qq.com', '2015-08-20 00:01:01', '2015-09-01 11:00:16', '1');
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -208,3 +215,4 @@ CREATE TABLE `sys_user_role` (
 -- Records of sys_user_role
 -- ----------------------------
 INSERT INTO `sys_user_role` VALUES ('1', '1');
+INSERT INTO `sys_user_role` VALUES ('1', '2');

@@ -11,7 +11,7 @@
 <script type="text/javascript">
 function fillGird(){
     $('#mainGrid').datagrid({
-        url:baseUrl+"/user/query/jsonlist",
+        url:baseUrl+"/lmuser/query/jsonlist",
         queryParams: {},
         width:'98%',
         height:'100%',
@@ -30,7 +30,8 @@ function fillGird(){
             {field:'id',checkbox:true},
             {field:'userName',title:'用户名',width:100},
             {field:'userMac',title:'用户Mac地址',width:100},
-            {field:'userProofRule',title:'用户令牌',width:200},
+            {field:'userProofRule',title:'用户令牌',width:150},
+            {field:'sZhNames',title:'科目',width:200},
             {field:'isActive',title:'是否激活',width:50,
             	formatter: function(value,row,index){
                     if(value==1){return "是"}else{return "否"}
@@ -47,7 +48,7 @@ function fillGird(){
                 	width:"50%",
                 	close:false,
                 	cache:false,
-                	href:baseUrl+"/user/query/addUI",
+                	href:baseUrl+"/lmuser/query/addUI",
                 	modal:true
                 });
             }
@@ -71,7 +72,7 @@ function fillGird(){
                         width:"50%",
                         close:false,
                         cache:false,
-                        href:baseUrl+"/user/query/updateUI?id="+id,
+                        href:baseUrl+"/lmuser/query/updateUI?id="+id,
                         modal:true
                     });
                 }
@@ -95,7 +96,7 @@ function fillGird(){
                         if(ids.length>0){
                             $.ajax({
                                 type : "POST",
-                                url : baseUrl+"/user/delete",
+                                url : baseUrl+"/lmuser/delete",
                                 data:{ids:ids},
                                 success : function(data) {
                                     if(data.state==200){

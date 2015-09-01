@@ -26,5 +26,6 @@ public interface LMUserMapper {
     List<Map<String,Object>> listMaps(LMUser record);
     List<Map<String,Object>> listMaps(Map<String,Object> map);
     
-
+    /********************* 服务 ************************/
+    LMUser selectBy4Property(LMUser record);
 }

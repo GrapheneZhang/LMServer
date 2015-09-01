@@ -117,12 +117,17 @@ public class SubjectServiceImpl implements SubjectService {
                 }
             }
         }
+        if (listSelected.size()>0) {
+            sIds=sIds.substring(0, sIds.length()-1);
+            sZhNames=sZhNames.substring(0, sZhNames.length()-1);
+        }
         
         //构造返回结果
         map.clear();
         map.put("listAllWithChkSign", listAll);
-        map.put("sIds", sIds.substring(0, sIds.length()-1));
-        map.put("sZhNames", sZhNames.substring(0, sZhNames.length()-1));
+        map.put("sIds", sIds);
+        map.put("sZhNames", sZhNames);
+       
         return map;
     }
 

@@ -6,7 +6,7 @@ import java.util.Map;
 import com.lm.busi.model.LMUser;
 
 public interface LMUserService {
-    public int insert(LMUser record, Short... sIds);
+    int insert(LMUser record, Short... sIds);
     
     void deleteByPrimaryKeys(Long... ids);
     
@@ -17,5 +17,7 @@ public interface LMUserService {
     boolean checkUnique(LMUser record);//唯一返回true
     
     List<LMUser> listForCRUD(Map<String,Object> map);//专为CRUD列表时服务
-
+    
+    /********************* 服务 ************************/
+    LMUser serviceLogin(LMUser record);
 }

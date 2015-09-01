@@ -22,6 +22,7 @@ import com.lm.base.ToJSPException;
 import com.lm.sys.model.Role;
 import com.lm.sys.service.PrivilegeService;
 import com.lm.sys.service.RoleService;
+import com.lm.sys.service.impl.RoleServiceImpl;
 import com.lm.utils.ProcessUtil;
 
 /**
@@ -88,7 +89,7 @@ public class RoleAction{
                 resultJson.put("total", roleService.listForCRUDCount(map));
             }
             //结果处理
-            List<Map<String, Object>> resultList=ProcessUtil.formatRoleList2ArrayList(list);
+            List<Map<String, Object>> resultList=RoleServiceImpl.formatRoleList2ArrayList(list);
             
             resultJson.put("rows", resultList);//结果返回
         } catch (Exception e) {
@@ -167,7 +168,7 @@ public class RoleAction{
         try {
             //角色
             Role record=roleService.selectByPrimaryKey(id);
-            Map<String,Object> resultMap=privilegeService.listPrivilegesByRoleId(id);
+            Map<String,Object> resultMap=privilegeService.listByRoleId(id);
             //查询出角色的权限列表
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> pList=(List<Map<String, Object>>)resultMap.get("listAllWithChkSign");

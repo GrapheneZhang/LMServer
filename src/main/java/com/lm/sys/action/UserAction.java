@@ -24,6 +24,7 @@ import com.lm.sys.model.User;
 import com.lm.sys.service.PrivilegeService;
 import com.lm.sys.service.RoleService;
 import com.lm.sys.service.UserService;
+import com.lm.sys.service.impl.UserServiceImpl;
 import com.lm.utils.ProcessUtil;
 
 /**
@@ -151,7 +152,7 @@ public class UserAction{
                 resultJson.put("total", userService.listForCRUDCount(map));
             }
             //结果处理
-            List<Map<String, Object>> resultList=ProcessUtil.formatUserList2ArrayList(list);
+            List<Map<String, Object>> resultList=UserServiceImpl.formatUserList2ArrayList(list);
             
             resultJson.put("rows", resultList);//结果返回
         } catch (Exception e) {
@@ -230,7 +231,7 @@ public class UserAction{
         try {
             //用户
             User record=userService.selectByPrimaryKey(id);
-            Map<String,Object> resultMap=roleService.listRolesByUserId(id);
+            Map<String,Object> resultMap=roleService.listByUserId(id);
             //查询出角色的权限列表
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> pList=(List<Map<String, Object>>)resultMap.get("listAllWithChkSign");

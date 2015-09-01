@@ -1,5 +1,8 @@
 package com.lm.sys.service.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lm.sys.dao.RoleMapper;
+import com.lm.sys.model.Privilege;
 import com.lm.sys.model.Role;
 import com.lm.sys.service.PrivilegeService;
 import com.lm.sys.service.RoleService;
+import com.lm.utils.ProcessUtil;
 
 /**
  * @Description: TODO
@@ -135,7 +140,7 @@ public class RoleServiceImpl implements RoleService {
      * 用户的角色列表
      */
     @Override
-    public Map<String, Object> listRolesByUserId(Integer userId) {
+    public Map<String, Object> listByUserId(Integer userId) {
         Map<String,Object> map=new HashMap<String,Object>();
         map.put(COLUMNS_KEY1, COLUMNS1);
         List<Map<String,Object>> listAll=roleMapper.listMaps(map);//获取所有
@@ -160,13 +165,76 @@ public class RoleServiceImpl implements RoleService {
                 }
             }
         }
+        if (listSelected.size()>0) {
+            rIds=rIds.substring(0, rIds.length()-1);
+            rNames=rNames.substring(0, rNames.length()-1);
+        }
         
         //构造返回结果
         map.clear();
         map.put("listAllWithChkSign", listAll);
-        map.put("rIds", rIds.substring(0, rIds.length()-1));
-        map.put("rNames", rNames.substring(0, rNames.length()-1));
+        map.put("rIds", rIds);
+        map.put("rNames", rNames);
         return map;
+    }
+    
+    /*********************工具方法******************************/
+    
+    /**
+     * @Title: formatRoleList2ArrayList 
+     * @Description: 将list(Page<E>)转为他的父类ArrayList
+     * @param list
+     * @throws
+     */
+    public static List<Map<String, Object>> formatRoleList2ArrayList(List<Role> list) {
+        //返回的结果
+        List<Map<String,Object>> resultList=new ArrayList<Map<String,Object>>();
+        DateFormat sd= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//格式化时间
+        
+        Map<String,Object> tempMap=null;
+        for (int i = 0; i < list.size(); i++) {
+            Role item=list.get(i);//源Model
+            tempMap=new HashMap<String,Object>(0);//目标Map
+            ProcessUtil.beanToMap(item, tempMap);//转Map
+            
+            //对可能有的时间进行格式化
+            if(tempMap.containsKey("createTime")){
+                tempMap.put("createTime",sd.format(tempMap.get("createTime")));
+            }
+            if(tempMap.containsKey("updateTime")){
+                tempMap.put("updateTime",sd.format(tempMap.get("updateTime")));
+            }
+            
+            //对权限进行字符串化处理
+            String pIds="";
+            String pNames="";
+            next:
+            if(tempMap.containsKey("privilegeList")){
+                @SuppressWarnings("unchecked")
+                List<Privilege> pList=(List<Privilege>)tempMap.get("privilegeList");
+                if(pList.size()<1){
+                    tempMap.remove("privilegeList");
+                    break next;
+                }
+                
+                for (int j = 0; j < pList.size(); j++) {
+                    pIds+=pList.get(j).getId()+",";
+                    pNames+=pList.get(j).getName()+",";
+                }
+                pIds = pIds.substring(0, pIds.length()-1);
+                pNames = pNames.substring(0, pNames.length()-1);
+                
+                //清除privilegeList列
+                tempMap.remove("privilegeList");
+            }
+            //设置上面生成的字符串描述
+            tempMap.put("pIds",pIds);
+            tempMap.put("pNames",pNames);
+            
+            //返回
+            resultList.add(tempMap);
+        }
+        return resultList;
     }
 
 }

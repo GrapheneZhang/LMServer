@@ -99,4 +99,11 @@ public class LMUserDaoImpl extends BaseDao implements LMUserMapper {
     public List<Map<String, Object>> listMaps(Map<String, Object> map) {
         return getSqlSession().selectList(NAMESPACE+"listMapsByMap", map);
     }
+    
+    
+    /********************* 服务 ************************/
+    @Override
+    public LMUser selectBy4Property(LMUser record) {
+        return getSqlSession().selectOne(NAMESPACE+"selectBy4Property", record);
+    }
 }

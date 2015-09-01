@@ -25,12 +25,12 @@ import com.lm.busi.service.SubjectService;
 import com.lm.busi.service.impl.LMUserServiceImpl;
 import com.lm.utils.ProcessUtil;
 
-@RequestMapping(value="/lmuser",method = { RequestMethod.GET, RequestMethod.POST })
+@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST })
 @Controller
 public class LMUserAction {
     
     private static final Logger LOGGER=Logger.getLogger(LMUserAction.class);//日志
-
+    private static final String URL_PREFIX="/lmuser";
     protected static final String JSP_PREFIX="/WEB-INF/jsp/busi/lmuser";//通用的jsp前缀
     
     @Resource
@@ -41,13 +41,13 @@ public class LMUserAction {
     private JSONObject resultJson=null;//结果JSON，使用时先new
     
     
-    /*********************Business Process***************************/
+    /*********************System Process***************************/
 
     /**
      * 1 代表此雷鸣用户
      * 跳转到list页面
      */
-    @RequestMapping("/query")
+    @RequestMapping(URL_PREFIX+"/query")
     public String list() throws ToJSPException{
         try {
         } catch (Exception e) {
@@ -62,7 +62,7 @@ public class LMUserAction {
      * 2.1 列表页面数据填充
      * 返回用于CRUD的json数据
      */
-    @RequestMapping(value="/query/jsonlist")
+    @RequestMapping(value=URL_PREFIX+"/query/jsonlist")
     @ResponseBody
     public JSONObject jsonList(String fuzzyWord,Integer page,Integer rows
             ){
@@ -96,7 +96,7 @@ public class LMUserAction {
     /**
      * 3.1 跳转到add页面
      */
-    @RequestMapping("/query/addUI")
+    @RequestMapping(URL_PREFIX+"/query/addUI")
     public ModelAndView addUI(HttpServletRequest request) throws ToJSPException{
         ModelAndView mav=new ModelAndView(JSP_PREFIX+"/add");
         try {
@@ -115,7 +115,7 @@ public class LMUserAction {
     /**
      * 3.2 用于增加一条记录
      */
-    @RequestMapping(value="/add")
+    @RequestMapping(value=URL_PREFIX+"/add")
     @ResponseBody
     public JSONObject add(LMUser record,Short... sIds){
         resultJson=new JSONObject();
@@ -135,7 +135,7 @@ public class LMUserAction {
      * 先在界面选择3条数据，然后手动从数据库删除其中1条，
      * 然后界面发送删除请求，看看是否回滚
      */
-    @RequestMapping(value="/delete")
+    @RequestMapping(value=URL_PREFIX+"/delete")
     @ResponseBody
     public JSONObject delete(Long... ids){
         resultJson=new JSONObject();
@@ -152,7 +152,7 @@ public class LMUserAction {
     /**
      * 5.1 跳转到update页面
      */
-    @RequestMapping("/query/updateUI")
+    @RequestMapping(URL_PREFIX+"/query/updateUI")
     public ModelAndView updateUI(Long id) throws ToJSPException{
         ModelAndView mav=new ModelAndView(JSP_PREFIX+"/update");
         try {
@@ -183,7 +183,7 @@ public class LMUserAction {
     /**
      * 5.2 update
      */
-    @RequestMapping(value="/update")
+    @RequestMapping(value=URL_PREFIX+"/update")
     @ResponseBody
     public JSONObject update(LMUser record,Short... sIds){
         resultJson=new JSONObject();
@@ -200,7 +200,7 @@ public class LMUserAction {
     /**
      * 6 唯一性检查
      */
-    @RequestMapping(value="/query/check")
+    @RequestMapping(value=URL_PREFIX+"/query/check")
     @ResponseBody
     public boolean check(LMUser record,Long id) throws Exception{
         //只能传递一个值过来
@@ -247,4 +247,27 @@ public class LMUserAction {
         }
         return lMUserService.checkUnique(record);
     }
+    
+    
+    /*********************Business Process***************************/
+    /**
+     * 登陆服务
+     */
+    @RequestMapping(value="/service/"+URL_PREFIX+"/login")
+    @ResponseBody
+    public JSONObject serviceLogin(LMUser record){
+        resultJson=new JSONObject();
+        try {
+            LMUser lmUser=lMUserService.serviceLogin(record);
+            if (null==lmUser) {
+                return ProcessUtil.returnError(403, "您还没有登陆");
+            }
+        } catch (Exception e) {
+            String errorMsg=ProcessUtil.formatErrMsg("登陆时");
+            LOGGER.error(errorMsg, e);
+            return ProcessUtil.returnError(500, errorMsg);
+        }
+        return ProcessUtil.returnCorrect(resultJson);
+    }
+    
 }
