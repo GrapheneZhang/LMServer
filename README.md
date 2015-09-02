@@ -1,4 +1,4 @@
-# ssmMvn
+# lm
 Use the MVN build a better ssm project.
 
 

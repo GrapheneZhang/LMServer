@@ -1,23 +1,10 @@
 package ssmMvn;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.session.RowBounds;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import com.lm.sys.action.PrivilegeAction;
-import com.lm.sys.dao.PrivilegeMapper;
-import com.lm.sys.service.PrivilegeService;
 
 
 public class ActionTest {
 
-    ApplicationContext context=null;
+/*    ApplicationContext context=null;
     PrivilegeMapper privilegeDao=null;
     PrivilegeService privilegeService=null;
     PrivilegeAction privilegeAction=null;
@@ -46,6 +33,6 @@ public class ActionTest {
     
     @Test
     public void mapperTest(){
-    } 
+    } */
 
 }
