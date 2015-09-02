@@ -17,4 +17,8 @@ public interface QuestionService {
     boolean checkUnique(Question record);//唯一返回true
     
     List<Map<String,Object>> listForCRUD(Map<String,Object> map);//专为CRUD列表时服务
+    
+    /********************* 服务 ************************/
+    List<Map<String,Object>> serviceList(Map<String,Object> map);//列表
+    
 }

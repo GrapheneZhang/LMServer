@@ -94,4 +94,20 @@
             #{id,jdbcType=INTEGER}
         </foreach>
     </delete>
+    
+    <!-- 获取传入的一些列来list -->
+    <select id="listMapsByMap" parameterType="map" resultType="map">
+        select ${columns_select} 
+            from lm_question q 
+            left join lm_subject s on q.subject=s.id
+        <where>
+            <if test="subjectEnName != null">
+                and s.en_name = #{subjectEnName}
+            </if>
+            <if test="fuzzyWord != null">
+                and (q.content like "%"#{fuzzyWord}"%"
+                    or q.answer like "%"#{fuzzyWord}"%")
+            </if>
+        </where>
+    </select>
 </mapper>

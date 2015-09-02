@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
@@ -20,18 +21,21 @@ import org.springframework.web.servlet.ModelAndView;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lm.base.ToJSPException;
-import com.lm.busi.model.Subject;
+import com.lm.busi.model.Question;
+import com.lm.busi.service.QuestionService;
 import com.lm.busi.service.SubjectService;
 import com.lm.utils.ProcessUtil;
 
 @RequestMapping(method = { RequestMethod.GET, RequestMethod.POST })
 @Controller
-public class SubjectAction {
+public class QuestionAction {
     
-    private static final Logger LOGGER=Logger.getLogger(SubjectAction.class);//日志
-    private static final String URL_PREFIX="/subject";
-    protected static final String JSP_PREFIX="/WEB-INF/jsp/busi/subject";//通用的jsp前缀
+    private static final Logger LOGGER=Logger.getLogger(QuestionAction.class);//日志
+    private static final String URL_PREFIX="/question";
+    protected static final String JSP_PREFIX="/WEB-INF/jsp/busi/question";//通用的jsp前缀
     
+    @Resource
+    private QuestionService questionService;
     @Resource
     private SubjectService subjectService;
 
@@ -41,14 +45,14 @@ public class SubjectAction {
     /*********************System Process***************************/
 
     /**
-     * 1 代表此科目
+     * 1 代表此题目
      * 跳转到list页面
      */
     @RequestMapping(URL_PREFIX+"/query")
     public String list() throws ToJSPException{
         try {
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("跳转到科目页面");
+            String errorMsg=ProcessUtil.formatErrMsg("跳转到题目页面");
             LOGGER.error(errorMsg, e);
             throw new ToJSPException(errorMsg);
         }
@@ -71,10 +75,10 @@ public class SubjectAction {
             List<Map<String,Object>> list=null;//结果list
             //查询数据库
             if (null==page||null==rows) {//全量查询
-                list=subjectService.listForCRUD(map);
+                list=questionService.listForCRUD(map);
             }else{//手写分页查询
                 PageHelper.startPage(page, rows);
-                list=subjectService.listForCRUD(map);
+                list=questionService.listForCRUD(map);
                 PageInfo<Map<String,Object>> p = new PageInfo<Map<String,Object>>(list);//取出分页统计信息statistic
                 resultJson.put("total", p.getTotal());
             }
@@ -83,7 +87,7 @@ public class SubjectAction {
             
             resultJson.put("rows", list);//结果返回
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("查询科目列表");
+            String errorMsg=ProcessUtil.formatErrMsg("查询题目列表");
             LOGGER.error(errorMsg, e);
             return ProcessUtil.returnError(500, errorMsg);
         }
@@ -97,8 +101,11 @@ public class SubjectAction {
     public ModelAndView addUI(HttpServletRequest request) throws ToJSPException{
         ModelAndView mav=new ModelAndView(JSP_PREFIX+"/add");
         try {
+            JSONArray jsonArray=new JSONArray();
+            jsonArray.addAll(subjectService.listForZtree());
+            mav.addObject("list",jsonArray);
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("跳转到科目增加页面");
+            String errorMsg=ProcessUtil.formatErrMsg("跳转到题目增加页面");
             LOGGER.error(errorMsg, e);
             throw new ToJSPException(errorMsg);
         }
@@ -111,12 +118,12 @@ public class SubjectAction {
      */
     @RequestMapping(value=URL_PREFIX+"/add")
     @ResponseBody
-    public JSONObject add(Subject record){
+    public JSONObject add(Question record){
         resultJson=new JSONObject();
         try {
-            subjectService.insertSelective(record);
+            questionService.insertSelective(record);
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("增加一个科目");
+            String errorMsg=ProcessUtil.formatErrMsg("增加一个题目");
             LOGGER.error(errorMsg, e);
             return ProcessUtil.returnError(500, errorMsg);
         }
@@ -131,12 +138,12 @@ public class SubjectAction {
      */
     @RequestMapping(value=URL_PREFIX+"/delete")
     @ResponseBody
-    public JSONObject delete(Short... ids){
+    public JSONObject delete(Long... ids){
         resultJson=new JSONObject();
         try {
-            subjectService.deleteByPrimaryKeys(ids);
+            questionService.deleteByPrimaryKeys(ids);
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("删除科目");
+            String errorMsg=ProcessUtil.formatErrMsg("删除题目");
             LOGGER.error(errorMsg, e);
             return ProcessUtil.returnError(500, errorMsg);
         }
@@ -147,14 +154,15 @@ public class SubjectAction {
      * 5.1 跳转到update页面
      */
     @RequestMapping(URL_PREFIX+"/query/updateUI")
-    public ModelAndView updateUI(Short id) throws ToJSPException{
+    public ModelAndView updateUI(Long id) throws ToJSPException{
         ModelAndView mav=new ModelAndView(JSP_PREFIX+"/update");
         try {
-            //科目
-            Subject record=subjectService.selectByPrimaryKey(id);
-            mav.addObject("subject", record);//结果返回
+            //题目
+            Question record=questionService.selectByPrimaryKey(id);
+            mav.addObject("list", subjectService.listForZtree());
+            mav.addObject("question", record);//结果返回
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("跳转到科目修改页面");
+            String errorMsg=ProcessUtil.formatErrMsg("跳转到题目修改页面");
             LOGGER.error(errorMsg, e);
             throw new ToJSPException(errorMsg);
         }
@@ -166,60 +174,41 @@ public class SubjectAction {
      */
     @RequestMapping(value=URL_PREFIX+"/update")
     @ResponseBody
-    public JSONObject update(Subject record){
+    public JSONObject update(Question record){
         resultJson=new JSONObject();
         try {
-            subjectService.updateByPrimaryKeySelective(record);
+            questionService.updateByPrimaryKeySelective(record);
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("修改一个科目");
+            String errorMsg=ProcessUtil.formatErrMsg("修改一个题目");
             LOGGER.error(errorMsg, e);
             return ProcessUtil.returnError(500, errorMsg);
         }
         return ProcessUtil.returnCorrect(resultJson);
     }
     
+    /*********************Business Process***************************/
     /**
-     * 6 唯一性检查
+     * 登陆服务
      */
-    @RequestMapping(value=URL_PREFIX+"/query/check")
+    @RequestMapping(value="/service/"+URL_PREFIX+"/list")
     @ResponseBody
-    public boolean check(Subject record,Short id) throws Exception{
-        //只能传递一个值过来
-        String willBeOperatedPro=null;//the chosen one
-        String originalOne=null;//the original one
-        String enName=record.getEnName();
-        String zhName=record.getZhName();
-        
-        int enCount=0;
-        int zhCount=0;
-        if (StringUtils.isNotBlank(enName)) {
-            enCount=1;
-            willBeOperatedPro=enName;
-            if (null!=id && 0!=id) {//修改的情况
-                originalOne=subjectService.selectByPrimaryKey(id).getEnName();
+    public JSONObject serviceList(String type){
+        resultJson=new JSONObject();
+        try {
+            //非空
+            if (StringUtils.isBlank(type)) {
+                return ProcessUtil.returnError(4, "type参数不能为空");
             }
+            //操作
+            Map<String,Object> map=new HashMap<String,Object>();
+            map.put("subjectEnName", type);
+            resultJson.put("titles", questionService.serviceList(map));
+        } catch (Exception e) {
+            String errorMsg=ProcessUtil.formatErrMsg("服务：查询题目");
+            LOGGER.error(errorMsg, e);
+            return ProcessUtil.returnError(500, errorMsg);
         }
-        if (StringUtils.isNotBlank(zhName)) {
-            zhCount=1;
-            willBeOperatedPro=zhName;
-            if (null!=id && 0!=id) {//修改的情况
-                originalOne=subjectService.selectByPrimaryKey(id).getZhName();
-            }
-        }
-        
-        //判断
-        if (enCount+zhCount!=1) {
-            throw new Exception("parameter is wrong,please check it");
-        }
-        
-        if (null!=id && 0!=id) {//修改的情况
-            if(willBeOperatedPro.equals(originalOne)){
-                return true;
-            }
-        }
-        return subjectService.checkUnique(record);
+        return ProcessUtil.returnLMCorrect(resultJson);
     }
     
-    
-    /*********************Business Process***************************/
 }

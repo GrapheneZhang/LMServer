@@ -8,7 +8,7 @@ import com.lm.busi.model.Subject;
 public interface SubjectService {
     int insertSelective(Subject record);
     
-    void deleteByPrimaryKeys(Integer... ids);
+    void deleteByPrimaryKeys(Short... ids);
     
     int updateByPrimaryKeySelective(Subject record);
     Subject selectByPrimaryKey(Short id);

@@ -21,10 +21,14 @@ public class QuestionServiceImpl implements QuestionService {
     /*** 定义需要动态查询的列的key和value ****/
     /** key **/
     //列名原始：是放在第一个select部分的
-    //private static final String COLUMNS_KEY1="columns_select";
+    private static final String COLUMNS_KEY1="columns_select";
     
     /** value **/
-    //private static final String COLUMNS1="id,name";
+    //管理页面需要
+    private static final String COLUMNS1="q.id,q.content,q.answer,q.subject,"
+            + "q.update_time as updateTime,s.en_name as enName,s.zh_name as zhName";
+    //service需要
+    private static final String COLUMNS2="q.id,q.content as title,q.answer as content,s.en_name as type";
     
     /*********************** PROCESS ***********************/
     /**
@@ -78,6 +82,16 @@ public class QuestionServiceImpl implements QuestionService {
      */
     @Override
     public List<Map<String, Object>> listForCRUD(Map<String, Object> map) {
+        map.put(COLUMNS_KEY1, COLUMNS1);
+        return questionMapper.listMaps(map);
+    }
+
+    
+    /*************************** 服务 ******************************/
+
+    @Override
+    public List<Map<String, Object>> serviceList(Map<String, Object> map) {
+        map.put(COLUMNS_KEY1, COLUMNS2);
         return questionMapper.listMaps(map);
     }
 

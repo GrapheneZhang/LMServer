@@ -39,7 +39,7 @@ public class SubjectServiceImpl implements SubjectService {
      * 删除
      */
     @Override
-    public void deleteByPrimaryKeys(Integer... ids) {
+    public void deleteByPrimaryKeys(Short... ids) {
         if (ids.length>0) {
             Map<String, Object> map=new HashMap<String, Object>();
             map.put("ids", ids);
@@ -78,6 +78,7 @@ public class SubjectServiceImpl implements SubjectService {
      */
     @Override
     public List<Map<String, Object>> listForCRUD(Map<String, Object> map) {
+        map.put(COLUMNS_KEY1, COLUMNS1);
         return subjectMapper.listMaps(map);
     }
 
