@@ -16,5 +16,6 @@ public interface SubjectService {
     
     List<Map<String,Object>> listForCRUD(Map<String,Object> map);//专为CRUD列表时服务
     List<Map<String,Object>> listForZtree();//权限列表，给ZTREE用，字段少
+    List<Subject> listModels(Map<String,Object> map);//给选择标签用的
     Map<String, Object> listByUserId(Long userId);//用户的科目列表
 }

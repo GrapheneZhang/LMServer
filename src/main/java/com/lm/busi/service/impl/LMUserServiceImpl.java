@@ -187,12 +187,13 @@ public class LMUserServiceImpl implements LMUserService {
     
     @Override
     public LMUser servicePermitSignUp(LMUser record) {
-        record.setIsActive(false);
+        record.setIsActive(null);
         return lMUserMapper.selectBy4Property(record);
     }
 
     @Override
     public int serviceSignUp(LMUser record) {
+        record.setIsActive(true);
         return lMUserMapper.updateByPrimaryKeySelective(record);
     }
 }

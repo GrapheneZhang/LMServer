@@ -9,6 +9,7 @@ $(function(){
         rules:{
         	enName:{
                 required:true,
+                maxlength:255,
                 remote:{
                     url:"${pageContext.request.contextPath}/subject/query/check",
                     type:"post"
@@ -16,6 +17,7 @@ $(function(){
             },
             zhName:{
             	required:true,
+            	maxlength:255,
                 remote:{
                     url:"${pageContext.request.contextPath}/subject/query/check",
                     type:"post"

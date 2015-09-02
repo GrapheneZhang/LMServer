@@ -14,9 +14,13 @@ var setting = {
 		radioType:"level"
 	},
     data: {
+    	key:{
+    		name:"zhName"
+    	},
         simpleData: {
             enable: true,
             idKey: "id"
+            
         }
     }, callback: {
     	onCheck: function(event,treeId,treeNode){
@@ -45,12 +49,14 @@ $(function(){
                 }
             },
             userMac:{
+            	maxlength:20,
                 remote:{
                     url:"${pageContext.request.contextPath}/lmuser/query/check",
                     type:"post"
                 }
             },
             userProofRule:{
+            	maxlength:80,
                 remote:{
                     url:"${pageContext.request.contextPath}/lmuser/query/check",
                     type:"post"
@@ -83,7 +89,7 @@ $(function(){
     
     //选择角色
     $("#pick").click(function(){
-    	treeObj=$.fn.zTree.init($("#thisTree"), setting, treeNode);
+    	treeObj=$.fn.zTree.init($("#subjectTree"), setting, treeNode);
     });
     
 });
@@ -115,7 +121,7 @@ $(function(){
                 <textarea id="sZhNames" name="sZhNames" readonly="readonly"></textarea>
                 <input type="hidden" name="sIds" id="sIds" />
                 <input type="button" id="pick" value="选择" />
-                <ul id="thisTree" class="ztree"></ul>
+                <ul id="subjectTree" class="ztree"></ul>
             </td>
         </tr>
         <tr>

@@ -16,6 +16,9 @@ var setting = {
 		radioType:"level"
 	},
     data: {
+    	key:{
+            name:"zhName"
+        },
         simpleData: {
             enable: true,
             idKey: "id"
@@ -48,6 +51,7 @@ $(function(){
                 }
             },
             userMac:{
+            	maxlength:20,
                 remote:{
                     url:"${pageContext.request.contextPath}/lmuser/query/check",
                     type:"post",
@@ -55,6 +59,7 @@ $(function(){
                 }
             },
             userProofRule:{
+            	maxlength:80,
                 remote:{
                     url:"${pageContext.request.contextPath}/lmuser/query/check",
                     type:"post",

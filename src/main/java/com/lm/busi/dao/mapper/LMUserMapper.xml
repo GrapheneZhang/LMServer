@@ -189,13 +189,20 @@
     
     <!-- 服务 -->
     <select id="selectBy4Property" parameterType="LMUser" resultMap="BaseResultMap">
-        select * from lm_user u where 
-            u.user_name = #{userName,jdbcType=VARCHAR} 
-            and u.user_mac = #{userMac,jdbcType=VARCHAR}
-            and u.user_proof_rule = #{userProofRule,jdbcType=VARCHAR}
-            <if test="isActive != null">
-                and u.is_active = #{isActive,jdbcType=BIT}
-            </if>
+        select * from lm_user u 
+            <where>
+                <if test="userName != null">
+                    and u.user_name = #{userName,jdbcType=VARCHAR}
+                </if>
+                <if test="userMac != null">
+                    and u.user_mac = #{userMac,jdbcType=VARCHAR}
+                </if>
+                <if test="userProofRule != null">
+                    and u.user_proof_rule = #{userProofRule,jdbcType=VARCHAR}
+                </if>
+	            <if test="isActive != null">
+	                and u.is_active = #{isActive,jdbcType=BIT}
+	            </if>
+            </where>
     </select>
-    
 </mapper>

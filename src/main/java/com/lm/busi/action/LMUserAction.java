@@ -272,7 +272,7 @@ public class LMUserAction {
             Map<String, Object> map=subjectService.listByUserId(lmUser.getId());
             resultJson.put("userPermission", (String)map.get("sEnNames"));
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("登陆时");
+            String errorMsg=ProcessUtil.formatErrMsg("登陆");
             LOGGER.error(errorMsg, e);
             return ProcessUtil.returnError(500, errorMsg);
         }
@@ -294,23 +294,30 @@ public class LMUserAction {
                     ||StringUtils.isBlank(userMac)) {
                 return ProcessUtil.returnError(500, "参数不能为空");
             }
-            StringBuilder proofRule = new StringBuilder(userName.substring(0, 5) + userMac.substring(5, 15));
-            record.setUserProofRule(proofRule.toString());
+            //数据非法
+            if (userName.length()!=11
+                    ||userMac.length()<16) {
+                return ProcessUtil.returnError(4, "参数格式不正确");
+            }
             
             //已经注册
-            if (null!=lMUserService.serviceLogin(record)) {
+            LMUser paramUser=new LMUser();
+            paramUser.setUserName(userName);
+            if (null!=lMUserService.serviceLogin(paramUser)) {
                 return ProcessUtil.returnError(3, "您已经注册");
             }
             //没有注册权限
-            LMUser lmUser=lMUserService.servicePermitSignUp(record);
-            if (null==lmUser) {
+            LMUser seletedOne=lMUserService.servicePermitSignUp(paramUser);
+            if (null==seletedOne) {
                 return ProcessUtil.returnError(2, "您还没有注册资格");
             }
             //注册
-            lmUser.setUserProofRule(proofRule.toString());
-            lMUserService.serviceSignUp(lmUser);
+            StringBuilder proofRule = new StringBuilder(userName.substring(0, 5) + userMac.substring(5, 15));
+            seletedOne.setUserMac(userMac);
+            seletedOne.setUserProofRule(proofRule.toString());
+            lMUserService.serviceSignUp(seletedOne);
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("登陆时");
+            String errorMsg=ProcessUtil.formatErrMsg("注册");
             LOGGER.error(errorMsg, e);
             return ProcessUtil.returnError(500, errorMsg);
         }

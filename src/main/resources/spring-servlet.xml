@@ -44,6 +44,9 @@
             <mvc:mapping path="/user/**" />
             <mvc:mapping path="/privilege/**" />
             <mvc:mapping path="/role/**" />
+            <mvc:mapping path="/lmuser/**" />
+            <mvc:mapping path="/subject/**" />
+            <mvc:mapping path="/question/**" />
             <bean class="com.lm.base.CenterInterceptor"></bean>
         </mvc:interceptor>
         <!-- 当设置多个拦截器时，先按顺序调用preHandle方法，然后逆序调用每个拦截器的postHandle和afterCompletion方法 -->

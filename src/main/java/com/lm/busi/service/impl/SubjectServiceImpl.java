@@ -92,6 +92,9 @@ public class SubjectServiceImpl implements SubjectService {
         return subjectMapper.listMaps(map);
     }
 
+    /**
+     * 根据雷鸣用户Id
+     */
     @Override
     public Map<String, Object> listByUserId(Long userId) {
         Map<String,Object> map=new HashMap<String,Object>();
@@ -134,5 +137,13 @@ public class SubjectServiceImpl implements SubjectService {
         map.put("sEnNames", sEnNames);
        
         return map;
+    }
+
+    /**
+     * models
+     */
+    @Override
+    public List<Subject> listModels(Map<String,Object> map) {
+        return subjectMapper.listModels(map);
     }
 }

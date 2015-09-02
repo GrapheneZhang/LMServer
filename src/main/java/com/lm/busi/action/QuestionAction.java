@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
@@ -101,9 +100,8 @@ public class QuestionAction {
     public ModelAndView addUI(HttpServletRequest request) throws ToJSPException{
         ModelAndView mav=new ModelAndView(JSP_PREFIX+"/add");
         try {
-            JSONArray jsonArray=new JSONArray();
-            jsonArray.addAll(subjectService.listForZtree());
-            mav.addObject("list",jsonArray);
+            mav.addObject("question", new Question());
+            mav.addObject("list",subjectService.listModels(new HashMap<String,Object>()));
         } catch (Exception e) {
             String errorMsg=ProcessUtil.formatErrMsg("跳转到题目增加页面");
             LOGGER.error(errorMsg, e);
@@ -159,7 +157,7 @@ public class QuestionAction {
         try {
             //题目
             Question record=questionService.selectByPrimaryKey(id);
-            mav.addObject("list", subjectService.listForZtree());
+            mav.addObject("list", subjectService.listModels(new HashMap<String,Object>()));
             mav.addObject("question", record);//结果返回
         } catch (Exception e) {
             String errorMsg=ProcessUtil.formatErrMsg("跳转到题目修改页面");
@@ -202,7 +200,12 @@ public class QuestionAction {
             //操作
             Map<String,Object> map=new HashMap<String,Object>();
             map.put("subjectEnName", type);
-            resultJson.put("titles", questionService.serviceList(map));
+            List<Map<String, Object>> list=questionService.serviceList(map);
+            //没有数据
+            if (list.size()<1) {
+                return ProcessUtil.returnError(3, "没有数据");
+            }
+            resultJson.put("titles", list);
         } catch (Exception e) {
             String errorMsg=ProcessUtil.formatErrMsg("服务：查询题目");
             LOGGER.error(errorMsg, e);

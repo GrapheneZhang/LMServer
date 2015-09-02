@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
-Source Server Version : 50168
-Source Host           : localhost:3306
+Source Server         : leiming
+Source Server Version : 50537
+Source Host           : 123.57.81.43:3306
 Source Database       : db_leiming
 
 Target Server Type    : MYSQL
-Target Server Version : 50168
+Target Server Version : 50537
 File Encoding         : 65001
 
-Date: 2015-09-01 17:06:26
+Date: 2015-09-02 16:14:35
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -24,7 +24,7 @@ CREATE TABLE `lm_question` (
   `content` varchar(5000) DEFAULT '' COMMENT '问题内容',
   `answer` varchar(5000) DEFAULT '' COMMENT '问题的答案，可能是答案也可能是答案选项',
   `subject` smallint(5) DEFAULT NULL COMMENT '题目科目',
-  `update_time` date DEFAULT NULL COMMENT '更新时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `FK_TOPIC_TOPIC_TYPE` (`subject`),
   CONSTRAINT `fk_lm_question_lm_subject_1` FOREIGN KEY (`subject`) REFERENCES `lm_subject` (`id`) ON DELETE SET NULL
@@ -104,7 +104,7 @@ CREATE TABLE `sys_privilege` (
   PRIMARY KEY (`id`),
   KEY `FK_PRIVILEGE_PARENTID_ID` (`parent_id`),
   CONSTRAINT `FK_PRIVILEGE_PARENTID_ID` FOREIGN KEY (`parent_id`) REFERENCES `sys_privilege` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_privilege
@@ -124,6 +124,17 @@ INSERT INTO `sys_privilege` VALUES ('12', '权限_删除', '/lm/privilege/delete
 INSERT INTO `sys_privilege` VALUES ('13', '权限_修改', '/lm/privilege/update', '4', '\0', '/lm/js/widget/zTree3.5/img/diy/3.png', '权限_修改', '2015-08-20 00:01:01', '2015-08-20 00:01:01');
 INSERT INTO `sys_privilege` VALUES ('14', '雷鸣管理', '', null, '', '/lm/js/widget/zTree3.5/img/diy/1_close.png', '雷鸣管理', '2015-09-01 09:59:05', '2015-09-01 10:07:22');
 INSERT INTO `sys_privilege` VALUES ('15', '雷鸣用户管理', '/lm/lmuser/query', '14', '', '/lm/js/widget/zTree3.5/img/diy/1_close.png', '', '2015-09-01 10:07:15', '2015-09-01 10:07:15');
+INSERT INTO `sys_privilege` VALUES ('16', '科目管理', '/lm/subject/query', '14', '', '/lm/js/widget/zTree3.5/img/diy/1_close.png', '', '2015-09-02 13:59:42', '2015-09-02 14:00:56');
+INSERT INTO `sys_privilege` VALUES ('17', '题目管理', '/lm/question/query', '14', '', '/lm/js/widget/zTree3.5/img/diy/1_close.png', '', '2015-09-02 14:00:39', '2015-09-02 14:00:39');
+INSERT INTO `sys_privilege` VALUES ('18', '科目_新增', '/lm/subject/add', '16', '\0', '/lm/js/widget/zTree3.5/img/diy/3.png', '', '2015-09-02 14:02:00', '2015-09-02 14:02:00');
+INSERT INTO `sys_privilege` VALUES ('19', '科目_修改', '/lm/subject/update', '16', '\0', '/lm/js/widget/zTree3.5/img/diy/3.png', '', '2015-09-02 14:02:31', '2015-09-02 14:02:31');
+INSERT INTO `sys_privilege` VALUES ('20', '科目_删除', '/lm/subject/delete', '16', '\0', '/lm/js/widget/zTree3.5/img/diy/3.png', '', '2015-09-02 14:03:00', '2015-09-02 14:03:00');
+INSERT INTO `sys_privilege` VALUES ('21', '雷鸣用户_新增', '/lm/lmuser/add', '15', '\0', '/lm/js/widget/zTree3.5/img/diy/3.png', '', '2015-09-02 14:05:47', '2015-09-02 14:05:47');
+INSERT INTO `sys_privilege` VALUES ('22', '雷鸣用户_修改', '/lm/lmuser/update', '15', '\0', '/lm/js/widget/zTree3.5/img/diy/3.png', '', '2015-09-02 14:06:12', '2015-09-02 14:06:12');
+INSERT INTO `sys_privilege` VALUES ('23', '雷鸣用户_删除', '/lm/lmuser/delete', '15', '\0', '/lm/js/widget/zTree3.5/img/diy/3.png', '', '2015-09-02 14:06:35', '2015-09-02 14:06:35');
+INSERT INTO `sys_privilege` VALUES ('24', '题目_新增', '/lm/question/add', '17', '\0', '/lm/js/widget/zTree3.5/img/diy/3.png', '', '2015-09-02 14:07:31', '2015-09-02 14:07:31');
+INSERT INTO `sys_privilege` VALUES ('25', '题目_修改', '/lm/question/update', '17', '\0', '/lm/js/widget/zTree3.5/img/diy/3.png', '', '2015-09-02 14:08:17', '2015-09-02 14:08:17');
+INSERT INTO `sys_privilege` VALUES ('26', '题目_删除', '/lm/question/delete', '17', '\0', '/lm/js/widget/zTree3.5/img/diy/3.png', '', '2015-09-02 14:08:46', '2015-09-02 14:08:46');
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -142,7 +153,7 @@ CREATE TABLE `sys_role` (
 -- Records of sys_role
 -- ----------------------------
 INSERT INTO `sys_role` VALUES ('1', '超级管理员', '这是有最高权限的超级管理员', '2015-08-20 00:01:01', '2015-08-20 00:01:01');
-INSERT INTO `sys_role` VALUES ('2', '雷鸣管理员', '', '2015-09-01 09:59:30', '2015-09-01 10:07:47');
+INSERT INTO `sys_role` VALUES ('2', '雷鸣管理员', '', '2015-09-01 09:59:30', '2015-09-02 14:09:03');
 
 -- ----------------------------
 -- Table structure for sys_role_privilege
@@ -175,6 +186,17 @@ INSERT INTO `sys_role_privilege` VALUES ('1', '12');
 INSERT INTO `sys_role_privilege` VALUES ('1', '13');
 INSERT INTO `sys_role_privilege` VALUES ('2', '14');
 INSERT INTO `sys_role_privilege` VALUES ('2', '15');
+INSERT INTO `sys_role_privilege` VALUES ('2', '16');
+INSERT INTO `sys_role_privilege` VALUES ('2', '17');
+INSERT INTO `sys_role_privilege` VALUES ('2', '18');
+INSERT INTO `sys_role_privilege` VALUES ('2', '19');
+INSERT INTO `sys_role_privilege` VALUES ('2', '20');
+INSERT INTO `sys_role_privilege` VALUES ('2', '21');
+INSERT INTO `sys_role_privilege` VALUES ('2', '22');
+INSERT INTO `sys_role_privilege` VALUES ('2', '23');
+INSERT INTO `sys_role_privilege` VALUES ('2', '24');
+INSERT INTO `sys_role_privilege` VALUES ('2', '25');
+INSERT INTO `sys_role_privilege` VALUES ('2', '26');
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -196,7 +218,7 @@ CREATE TABLE `sys_user` (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES ('1', 'admin', '张三', 'admin', '13113112312', '12345@qq.com', '2015-08-20 00:01:01', '2015-09-01 11:00:16', '1');
+INSERT INTO `sys_user` VALUES ('1', 'admin', '张三', 'admin', '13113112312', '12345@qq.com', '2015-08-20 00:01:01', '2015-09-02 14:38:26', '1');
 
 -- ----------------------------
 -- Table structure for sys_user_role
