@@ -110,6 +110,25 @@ public class UserAction{
         return mav;
     }
     
+    /**4
+     * @Title: signout 
+     * @Description: 注销
+     * @param request
+     * @return
+     * @throws
+     */
+    @RequestMapping("/sys/signout")
+    public ModelAndView signout(HttpServletRequest request) {
+        ModelAndView mav=new ModelAndView("/login");
+        HttpSession session=request.getSession();
+        try {
+            session.invalidate();
+        } catch (IllegalStateException e) {
+            return mav;
+        }
+        return mav;
+    }
+    
     
     /*********************Business Process***************************/
     /**
