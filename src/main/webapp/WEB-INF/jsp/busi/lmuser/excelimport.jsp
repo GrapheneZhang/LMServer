@@ -27,26 +27,28 @@ $(function(){
             }
         }, submitHandler:function(form){
         	ajaxLoading();//loding
-        	$.ajaxFileUpload({
-                url:"${pageContext.request.contextPath}/lmuser/add/excel",
-                type: "POST",
-                secureuri: false,
-                fileElementId: 'excelFile',
-                dataType: "json",
-                success: function (data) {
-                	ajaxLoadEnd();//lodingEnd
-                	if(data.state==200){
-                        $('#mainGrid').datagrid("reload");
-                        $.messager.alert("消息提示", data.correctMsg);
-                        $('#div_cu').dialog('close');
-                    }else{
-                        $.messager.alert("消息提示", "失败！"+data.errorMsg);
+        	if(true){//这个if是为了让前边的ajaxLoading一定执行
+        		$.ajaxFileUpload({
+                    url:"${pageContext.request.contextPath}/lmuser/add/excel",
+                    type: "POST",
+                    secureuri: false,
+                    fileElementId: 'excelFile',
+                    dataType: "json",
+                    success: function (data) {
+                        ajaxLoadEnd();//lodingEnd
+                        if(data.state==200){
+                            $('#mainGrid').datagrid("reload");
+                            $.messager.alert("消息提示", data.correctMsg);
+                            $('#div_cu').dialog('close');
+                        }else{
+                            $.messager.alert("消息提示", "失败！"+data.errorMsg);
+                        }
+                    },error: function(data,status,e){
+                        ajaxLoadEnd();//lodingEnd
+                        $.messager.alert("失败", "文件太大请选择10MB以下的文件或者文件中有不能解析的内容！");
                     }
-                },error: function(data,status,e){
-                	ajaxLoadEnd();//lodingEnd
-                	$.messager.alert("消息提示", "失败！文件太大，请选择10MB以下的文件！");
-                }
-            });
+                });
+        	}
         }
     });
 });

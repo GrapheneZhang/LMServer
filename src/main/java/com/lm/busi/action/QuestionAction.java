@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -201,7 +202,7 @@ public class QuestionAction {
     public String excelimportUI() throws ToJSPException{
         try {
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("跳转到科目Excel导入页面");
+            String errorMsg=ProcessUtil.formatErrMsg("跳转到Excel导入页面");
             LOGGER.error(errorMsg, e);
             throw new ToJSPException(errorMsg);
         }
@@ -280,6 +281,85 @@ public class QuestionAction {
                 workbook.close();//关闭
             } catch (IOException e) {
                 String errorMsg=ProcessUtil.formatErrMsg("关闭Excel");
+                LOGGER.error(errorMsg, e);
+                return ProcessUtil.returnError(500, errorMsg);
+            }
+        }
+        return ProcessUtil.returnCorrect(resultJson);
+    }
+    
+    /**
+     * 8
+     * 跳转到word导入页面
+     */
+    @RequestMapping(URL_PREFIX+"/add/wordUI")
+    public ModelAndView wordImportUI() throws ToJSPException{
+        ModelAndView mav=new ModelAndView(JSP_PREFIX+"/wordimport");
+        try {
+            mav.addObject("question", new Question());
+            mav.addObject("list",subjectService.listModels(new HashMap<String,Object>()));
+        } catch (Exception e) {
+            String errorMsg=ProcessUtil.formatErrMsg("跳转到word导入页面");
+            LOGGER.error(errorMsg, e);
+            throw new ToJSPException(errorMsg);
+        }
+        return mav;
+    }
+    
+    
+    /**
+     * 9
+     * word上传
+     */
+    @RequestMapping(URL_PREFIX+"/add/word")
+    @ResponseBody
+    public JSONObject txtimport(MultipartFile wordFile,Short subject) throws ToJSPException{
+        resultJson=new JSONObject();
+        WordExtractor word=null;
+        try {
+            //1 获取Word
+            word=new WordExtractor(wordFile.getInputStream());
+            String text=word.getText();
+            //空返回
+            if (StringUtils.isBlank(text)) {
+                return ProcessUtil.returnError(resultJson, "Word数据为空");
+            }
+            String[] questions=text.split("\\r\\n\\r\\n");//拿到每个题目
+            
+            //2 处理Word
+            List<Question> list=new ArrayList<Question>();
+            Question question=null;//临时问题对象
+            for (int i = 0; i < questions.length; i++) {
+                question=new Question();
+                question.setSubject(subject);
+                String[] stringQuestion=questions[i].split("&&");
+                if (stringQuestion.length==2) {//正常记录
+                    question.setContent(stringQuestion[0]);
+                    question.setAnswer(stringQuestion[1]);
+                }else if(stringQuestion.length==1){//只有问题可以
+                    question.setContent(stringQuestion[0]);
+                }else{//长度为3或者0之类的跳过本次循环
+                    continue;
+                }
+                list.add(question);
+            }
+            
+            //3 批量插入
+            int count=questionService.insertListSelective(list);
+            resultJson.put("correctMsg", "成功插入了"+count+"条记录");
+        } catch (Exception e) {
+            String errorMsg=ProcessUtil.formatErrMsg("请确保Word格式正确或联系管理员，在操作Word");
+            if (e instanceof PacketTooBigException) {
+                errorMsg=ProcessUtil.formatErrMsg("Word文件");
+            }
+            
+            LOGGER.error(errorMsg, e);
+            return ProcessUtil.returnError(500, errorMsg);
+        } finally{
+            try {
+                word.close();
+            } catch (IOException e) {
+                String errorMsg=ProcessUtil.formatErrMsg("关闭Word");
                 LOGGER.error(errorMsg, e);
                 return ProcessUtil.returnError(500, errorMsg);
             }
