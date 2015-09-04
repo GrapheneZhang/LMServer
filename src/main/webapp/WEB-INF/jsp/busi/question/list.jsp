@@ -44,7 +44,7 @@ function fillGird(){
                 	width:"50%",
                 	close:false,
                 	cache:false,
-                	href:baseUrl+"/question/query/addUI",
+                	href:baseUrl+"/question/add/addUI",
                 	modal:true
                 });
             }
@@ -68,7 +68,7 @@ function fillGird(){
                         width:"50%",
                         close:false,
                         cache:false,
-                        href:baseUrl+"/question/query/updateUI?id="+id,
+                        href:baseUrl+"/question/update/updateUI?id="+id,
                         modal:true
                     });
                 }

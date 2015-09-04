@@ -51,6 +51,10 @@
         </mvc:interceptor>
         <!-- 当设置多个拦截器时，先按顺序调用preHandle方法，然后逆序调用每个拦截器的postHandle和afterCompletion方法 -->
     </mvc:interceptors>
+    
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+	    <property name="maxUploadSize" value="10485760" /><!-- 10MB -->
+	</bean> 
 
     <bean
         class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">

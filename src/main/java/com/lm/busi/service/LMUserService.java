@@ -7,6 +7,7 @@ import com.lm.busi.model.LMUser;
 
 public interface LMUserService {
     int insert(LMUser record, Short... sIds);
+    int insertList(List<Map<String, Object>> rowList);
     
     void deleteByPrimaryKeys(Long... ids);
     

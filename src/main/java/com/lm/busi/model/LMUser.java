@@ -62,4 +62,5 @@ public class LMUser {
     public void setSubjectList(List<Subject> subjectList) {
         this.subjectList = subjectList;
     }
+    
 }

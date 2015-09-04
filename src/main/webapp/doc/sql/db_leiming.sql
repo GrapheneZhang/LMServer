@@ -49,6 +49,17 @@ CREATE TABLE `lm_subject` (
 -- ----------------------------
 -- Records of lm_subject
 -- ----------------------------
+INSERT INTO `lm_subject` VALUES ('1', 'computer', '计算机');
+INSERT INTO `lm_subject` VALUES ('2', 'accounting', '会计');
+INSERT INTO `lm_subject` VALUES ('3', 'teacher', '教师资格');
+INSERT INTO `lm_subject` VALUES ('4', 'exama', '三级心理咨询师');
+INSERT INTO `lm_subject` VALUES ('5', 'examb', '三级人力资源管理师');
+INSERT INTO `lm_subject` VALUES ('6', 'examc', '三级秘书资格证');
+INSERT INTO `lm_subject` VALUES ('7', 'examd', '高级育婴师');
+INSERT INTO `lm_subject` VALUES ('8', 'exame', '公共营养师');
+INSERT INTO `lm_subject` VALUES ('9', 'examf', '物流师');
+INSERT INTO `lm_subject` VALUES ('10', 'examg', '企业培训师');
+INSERT INTO `lm_subject` VALUES ('11', 'examh', '理财规划师');
 
 -- ----------------------------
 -- Table structure for lm_user
@@ -62,13 +73,11 @@ CREATE TABLE `lm_user` (
   `is_active` bit(1) DEFAULT b'0' COMMENT '是否激活，0位激活，1已激活',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQUE_NAME_MAC_PROOF` (`user_name`,`user_mac`,`user_proof_rule`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of lm_user
 -- ----------------------------
-INSERT INTO `lm_user` VALUES ('1', '18515012319', 'sdfasd', 'sdfsdf', '\0');
-INSERT INTO `lm_user` VALUES ('2', '18515012320', 'ssdf11', 'sdfsdfs11', '');
 
 -- ----------------------------
 -- Table structure for lm_user_subject

@@ -22,6 +22,7 @@ $.extend($.validator.messages, {
 	creditcard: "请输入有效的信用卡号码",
 	equalTo: "你的输入不相同",
 	extension: "请输入有效的后缀",
+	accept: "请选择合乎要求的文件类型",
 	maxlength: $.validator.format("最多可以输入 {0} 个字符"),
 	minlength: $.validator.format("最少要输入 {0} 个字符"),
 	rangelength: $.validator.format("请输入长度在 {0} 到 {1} 之间的字符串"),

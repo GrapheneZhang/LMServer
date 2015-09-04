@@ -48,7 +48,7 @@ function fillGird(){
                 	width:"50%",
                 	close:false,
                 	cache:false,
-                	href:baseUrl+"/lmuser/query/addUI",
+                	href:baseUrl+"/lmuser/add/addUI",
                 	modal:true
                 });
             }
@@ -72,7 +72,7 @@ function fillGird(){
                         width:"50%",
                         close:false,
                         cache:false,
-                        href:baseUrl+"/lmuser/query/updateUI?id="+id,
+                        href:baseUrl+"/lmuser/update/updateUI?id="+id,
                         modal:true
                     });
                 }
@@ -109,6 +109,20 @@ function fillGird(){
                             })
                         }
                     }
+                });
+            }
+        },'-',{
+            text:'Excel导入',
+            iconCls:'icon-excel',
+            handler:function(){
+                $('#div_cu').dialog({
+                    title:"Excel导入",
+                    height:"50%",
+                    width:"50%",
+                    close:false,
+                    cache:false,
+                    href:baseUrl+"/lmuser/add/excelUI",
+                    modal:true
                 });
             }
         },'-',{

@@ -93,7 +93,7 @@ public class SubjectAction {
     /**
      * 3.1 跳转到add页面
      */
-    @RequestMapping(URL_PREFIX+"/query/addUI")
+    @RequestMapping(URL_PREFIX+"/add/addUI")
     public ModelAndView addUI(HttpServletRequest request) throws ToJSPException{
         ModelAndView mav=new ModelAndView(JSP_PREFIX+"/add");
         try {
@@ -146,7 +146,7 @@ public class SubjectAction {
     /**
      * 5.1 跳转到update页面
      */
-    @RequestMapping(URL_PREFIX+"/query/updateUI")
+    @RequestMapping(URL_PREFIX+"/update/updateUI")
     public ModelAndView updateUI(Short id) throws ToJSPException{
         ModelAndView mav=new ModelAndView(JSP_PREFIX+"/update");
         try {

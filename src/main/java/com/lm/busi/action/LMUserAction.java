@@ -1,6 +1,9 @@
 package com.lm.busi.action;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,10 +15,15 @@ import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.lm.base.ToJSPException;
@@ -24,6 +32,7 @@ import com.lm.busi.service.LMUserService;
 import com.lm.busi.service.SubjectService;
 import com.lm.busi.service.impl.LMUserServiceImpl;
 import com.lm.utils.ProcessUtil;
+import com.lm.utils.Validate;
 
 @RequestMapping(method = { RequestMethod.GET, RequestMethod.POST })
 @Controller
@@ -96,7 +105,7 @@ public class LMUserAction {
     /**
      * 3.1 跳转到add页面
      */
-    @RequestMapping(URL_PREFIX+"/query/addUI")
+    @RequestMapping(URL_PREFIX+"/add/addUI")
     public ModelAndView addUI(HttpServletRequest request) throws ToJSPException{
         ModelAndView mav=new ModelAndView(JSP_PREFIX+"/add");
         try {
@@ -152,7 +161,7 @@ public class LMUserAction {
     /**
      * 5.1 跳转到update页面
      */
-    @RequestMapping(URL_PREFIX+"/query/updateUI")
+    @RequestMapping(URL_PREFIX+"/update/updateUI")
     public ModelAndView updateUI(Long id) throws ToJSPException{
         ModelAndView mav=new ModelAndView(JSP_PREFIX+"/update");
         try {
@@ -246,6 +255,97 @@ public class LMUserAction {
             }
         }
         return lMUserService.checkUnique(record);
+    }
+    
+    /**
+     * 7 
+     * 跳转到Excel导入页面
+     */
+    @RequestMapping(URL_PREFIX+"/add/excelUI")
+    public String excelimportUI() throws ToJSPException{
+        try {
+        } catch (Exception e) {
+            String errorMsg=ProcessUtil.formatErrMsg("跳转到雷鸣用户Excel导入页面");
+            LOGGER.error(errorMsg, e);
+            throw new ToJSPException(errorMsg);
+        }
+        return JSP_PREFIX+"/excelimport";
+    }
+    
+    /**
+     * 8
+     * excel上传
+     */
+    @RequestMapping(URL_PREFIX+"/add/excel")
+    @ResponseBody
+    public JSONObject excelimport(MultipartFile excelFile) throws ToJSPException{
+        resultJson=new JSONObject();
+        HSSFWorkbook workbook=null;
+        try {
+            //1 获取excel
+            workbook=new HSSFWorkbook(excelFile.getInputStream());
+            HSSFSheet sheet=workbook.getSheetAt(0);
+            //空表返回
+            if (sheet.getLastRowNum()==0) {
+                return ProcessUtil.returnError(resultJson, "Excel数据为空");
+            }
+            Iterator<Row> iterator=sheet.rowIterator();
+            //2 迭代row
+            List<Map<String,Object>> rowList=new ArrayList<Map<String,Object>>();
+            Map<String,Object> map=null;//用来存放手机号和科目
+            LMUser lmUser=null;//临时雷鸣用户对象
+            iterator.next();//跳过第一行
+            Row tempRow=null;
+            while(iterator.hasNext()){
+                tempRow=iterator.next();
+                //2.1 数据校验
+                //手机号码
+                long userName=(long)tempRow.getCell(0).getNumericCellValue();//取String会出错，因为是手机号码
+                if (userName<9999999999l||userName>19999999999l) {//不是手机号码
+                    StringBuffer sb=new StringBuffer("第").append(tempRow.getRowNum()+1)
+                            .append("行手机号码格式有误。");
+                    return ProcessUtil.returnError(resultJson,sb.toString());
+                }
+                //科目类型
+                String stringSids=tempRow.getCell(1).getStringCellValue();
+                if (!Validate.isStringWithComma(stringSids)) {
+                    StringBuffer sb=new StringBuffer("第").append(tempRow.getRowNum()+1)
+                            .append("行科目类型格式有误。");
+                    return ProcessUtil.returnError(resultJson,sb.toString());
+                }
+                //2.2 操作
+                map=new HashMap<String,Object>();
+                lmUser=new LMUser();
+                lmUser.setUserName(String.valueOf(userName));
+                map.put("lmUser", lmUser);//临时雷鸣用户对象
+                map.put("sIds", stringSids.split(","));//科目
+                rowList.add(map);
+            }
+            
+            //3 批量插入
+            int count=lMUserService.insertList(rowList);
+            resultJson.put("correctMsg", "成功插入了"+count+"条记录");
+        } catch (Exception e) {
+            String errorMsg=ProcessUtil.formatErrMsg("请确保Excel格式正确，在操作Excel");
+            if (e instanceof DuplicateKeyException) {
+                String duplicateKey=((DuplicateKeyException)e).getLocalizedMessage();
+                errorMsg=new StringBuffer("用户名(手机号)：").
+                        append(Validate.findMobilePhone(duplicateKey)).append("已被使用，数据库插入")
+                        .toString();
+                errorMsg=ProcessUtil.formatErrMsg(errorMsg);
+            }
+            LOGGER.error(errorMsg, e);
+            return ProcessUtil.returnError(500, errorMsg);
+        } finally{
+            try {
+                workbook.close();//关闭
+            } catch (IOException e) {
+                String errorMsg=ProcessUtil.formatErrMsg("关闭Excel");
+                LOGGER.error(errorMsg, e);
+                return ProcessUtil.returnError(500, errorMsg);
+            }
+        }
+        return ProcessUtil.returnCorrect(resultJson);
     }
     
     

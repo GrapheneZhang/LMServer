@@ -55,6 +55,31 @@ public class LMUserServiceImpl implements LMUserService {
         }
         return effectCount;
     }
+    
+    /**
+     * 批量增加
+     */
+    @Transactional
+    @Override
+    public int insertList(List<Map<String, Object>> rowList) {
+        int countCorrect=0;//暂时正确插入的数（说暂时是因为如果出现Exception事务将Rollback）
+        for (int i = 0; i < rowList.size(); i++) {
+            Map<String, Object> tempMap=rowList.get(i);
+            LMUser lmUser=(LMUser)tempMap.get("lmUser");
+            //插入主LMUser
+            countCorrect+=lMUserMapper.insertSelective(lmUser);
+            //插入关系表
+            String[] sIds=(String[])tempMap.get("sIds");//权限数组，可能为空
+            if (sIds.length>0) {
+                Long id=lmUser.getId();
+                Map<String, Object> map=new HashMap<String, Object>();
+                map.put("userId", id);
+                map.put("sIds", sIds);
+                lMUserMapper.insertUserSubject(map);
+            }
+        }
+        return countCorrect;
+    }
 
     /**
      * 删除
@@ -196,4 +221,5 @@ public class LMUserServiceImpl implements LMUserService {
         record.setIsActive(true);
         return lMUserMapper.updateByPrimaryKeySelective(record);
     }
+
 }
