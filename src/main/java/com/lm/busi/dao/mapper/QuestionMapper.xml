@@ -116,6 +116,8 @@
             </if>
             <if test="fuzzyWord != null">
                 and (q.content like "%"#{fuzzyWord}"%"
+                	or s.en_name like "%"#{fuzzyWord}"%"
+                	or s.zh_name like "%"#{fuzzyWord}"%"
                     or q.answer like "%"#{fuzzyWord}"%")
             </if>
         </where>
