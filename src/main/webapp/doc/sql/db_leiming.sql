@@ -222,12 +222,13 @@ CREATE TABLE `sys_user` (
   `update_time` datetime NOT NULL COMMENT '更新时间',
   `login_count` bigint(20) NOT NULL DEFAULT '0' COMMENT '登陆次数',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
 INSERT INTO `sys_user` VALUES ('1', 'admin', '张三', 'admin', '13113112312', '12345@qq.com', '2015-08-20 00:01:01', '2015-09-02 14:38:26', '1');
+INSERT INTO `sys_user` VALUES ('2', 'leiming', '雷鸣管理员', 'leiming', '13113112312', '12345@qq.com', '2015-08-20 00:01:01', '2015-09-02 14:38:26', '1');
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -247,3 +248,4 @@ CREATE TABLE `sys_user_role` (
 -- ----------------------------
 INSERT INTO `sys_user_role` VALUES ('1', '1');
 INSERT INTO `sys_user_role` VALUES ('1', '2');
+INSERT INTO `sys_user_role` VALUES ('2', '2');
