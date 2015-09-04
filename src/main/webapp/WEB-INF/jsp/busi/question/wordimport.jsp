@@ -67,12 +67,12 @@ $(function(){
             </td>
         </tr>
         <tr>
-            <td colspan="2">请选择基于“题目word导入.doc”文件的文件(不能大于10MB)</td>
+            <td colspan="2">请选择基于“题目word导入.doc/题目txt导入.txt”文件的文件(不能大于10MB)</td>
         </tr>
         <tr>
             <td>txt文件:</td>
             <td>
-                <input type="file" name="wordFile" id="wordFile" accept="application/msword" />
+                <input type="file" name="wordFile" id="wordFile" accept="application/msword,text/plain" />
             </td>
         </tr>
     </table>

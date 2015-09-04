@@ -56,14 +56,14 @@
 </head>
 <body class="easyui-layout">
     <div data-options="region:'north',border:false" style="height:105px;font-size:0px;background:rgba(217, 235, 242, 1)">
-        <img alt="雷鸣教育" src="<%=request.getContextPath()%>/images/framework/index.gif">
+                      河南雷鸣教育咨询有限公司
         <div style="position: absolute; bottom: 10px; right: 40px;"><span style="font-size:16px;">欢迎你：${user.userName} <a href="<%=request.getContextPath()%>/sys/signout" style="padding-left:10px">注销</a></span></div>
     </div>
     <div data-options="region:'west',split:true,title:'导航菜单'" style="width:150px;">
         <ul id="navigateTree" class="ztree"></ul>
     </div>
     <div data-options="region:'south',border:false" style="height:50px;background:rgba(217, 235, 242, 1);padding:10px;text-align: center">
-版权所有：苏州雷鸣教育管理有限公司
+版权所有：河南雷鸣教育咨询有限公司
     </div>
     <div data-options="region:'center',title:'数据中心'">
         <div class="easyui-tabs" id="tabs" data-options="fit:true,border:false,plain:true">

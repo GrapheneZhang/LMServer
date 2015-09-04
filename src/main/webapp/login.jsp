@@ -225,7 +225,7 @@ a {
         </form>
     </div>
     <div style="text-align: center;">
-        <p>雷鸣教育</p>
+        <p>河南雷鸣教育咨询有限公司</p>
     </div>
 </body>
 </html>

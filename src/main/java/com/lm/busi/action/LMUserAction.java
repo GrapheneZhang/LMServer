@@ -282,6 +282,11 @@ public class LMUserAction {
         resultJson=new JSONObject();
         HSSFWorkbook workbook=null;
         try {
+            String fileName=excelFile.getOriginalFilename();
+            int fileNameLength=fileName.length();
+            if(".xls".equals(fileName.substring(fileNameLength-4, fileNameLength))){
+                return ProcessUtil.returnError(resultJson, "文件格式错误,必须为.xls");
+            }
             //1 获取excel
             workbook=new HSSFWorkbook(excelFile.getInputStream());
             HSSFSheet sheet=workbook.getSheetAt(0);

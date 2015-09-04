@@ -1,6 +1,8 @@
 package com.lm.busi.action;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -219,6 +221,12 @@ public class QuestionAction {
         resultJson=new JSONObject();
         HSSFWorkbook workbook=null;
         try {
+            //文件格式错误
+            String fileName=excelFile.getOriginalFilename();
+            int fileNameLength=fileName.length();
+            if (!".xls".equals(fileName.substring(fileNameLength-4, fileNameLength))) {//xls文件
+                return ProcessUtil.returnError(resultJson, "文件格式错误,必须为.xls"); 
+            }
             //1 获取excel
             workbook=new HSSFWorkbook(excelFile.getInputStream());
             HSSFSheet sheet=workbook.getSheetAt(0);
@@ -315,14 +323,34 @@ public class QuestionAction {
     @ResponseBody
     public JSONObject txtimport(MultipartFile wordFile,Short subject) throws ToJSPException{
         resultJson=new JSONObject();
+        String fileName=null;
         WordExtractor word=null;
         try {
-            //1 获取Word
-            word=new WordExtractor(wordFile.getInputStream());
-            String text=word.getText();
+            //1 获取Word或txt
+            fileName=wordFile.getOriginalFilename();
+            int fileNameLength=fileName.length();
+            String text=null;
+            if (".txt".equals(fileName.substring(fileNameLength-4, fileNameLength))) {//txt文件
+                InputStreamReader isr=new InputStreamReader(wordFile.getInputStream(),"GBK");
+                BufferedReader br=new BufferedReader(isr);
+                char[] chars=new char[1024];
+                int len=0;
+                StringBuilder sb=new StringBuilder();
+                while ((len=br.read(chars))>0) {
+                    br.read(chars, 0, len);
+                    sb.append(new String(chars));
+                }
+                text=sb.toString();
+            }else if(".doc".equals(fileName.substring(fileNameLength-4, fileNameLength))){
+                word=new WordExtractor(wordFile.getInputStream());
+                text=word.getText();
+            }else{//格式错误返回
+                return ProcessUtil.returnError(resultJson, ",必须为.doc或者.txt");
+            }
+            
             //空返回
             if (StringUtils.isBlank(text)) {
-                return ProcessUtil.returnError(resultJson, "Word数据为空");
+                return ProcessUtil.returnError(resultJson, "Word/txt数据为空");
             }
             String[] questions=text.split("\\r\\n\\r\\n");//拿到每个题目
             
@@ -348,16 +376,18 @@ public class QuestionAction {
             int count=questionService.insertListSelective(list);
             resultJson.put("correctMsg", "成功插入了"+count+"条记录");
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("请确保Word格式正确或联系管理员，在操作Word");
+            String errorMsg=ProcessUtil.formatErrMsg("请确保Word/txt格式正确或联系管理员，在操作Word/txt");
             if (e instanceof PacketTooBigException) {
-                errorMsg=ProcessUtil.formatErrMsg("Word文件");
+                errorMsg=ProcessUtil.formatErrMsg("Word/txt文件");
             }
             
             LOGGER.error(errorMsg, e);
             return ProcessUtil.returnError(500, errorMsg);
         } finally{
             try {
-                word.close();
+                if (null!=word) {
+                    word.close();
+                }
             } catch (IOException e) {
                 String errorMsg=ProcessUtil.formatErrMsg("关闭Word");
                 LOGGER.error(errorMsg, e);

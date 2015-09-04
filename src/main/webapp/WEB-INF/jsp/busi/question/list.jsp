@@ -122,11 +122,11 @@ function fillGird(){
                 });
             }
         },'-',{
-            text:'Word导入',
+            text:'Word/txt导入',
             iconCls:'icon-word',
             handler:function(){
                 $('#div_cu').dialog({
-                    title:"word导入",
+                    title:"word/txt导入",
                     height:"50%",
                     width:"50%",
                     close:false,
