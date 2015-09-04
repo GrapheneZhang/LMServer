@@ -1,6 +1,9 @@
 package com.lm.busi.action;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -11,19 +14,25 @@ import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lm.base.ToJSPException;
 import com.lm.busi.model.Question;
+import com.lm.busi.model.Subject;
 import com.lm.busi.service.QuestionService;
 import com.lm.busi.service.SubjectService;
 import com.lm.utils.ProcessUtil;
+import com.mysql.jdbc.PacketTooBigException;
 
 @RequestMapping(method = { RequestMethod.GET, RequestMethod.POST })
 @Controller
@@ -180,6 +189,100 @@ public class QuestionAction {
             String errorMsg=ProcessUtil.formatErrMsg("修改一个题目");
             LOGGER.error(errorMsg, e);
             return ProcessUtil.returnError(500, errorMsg);
+        }
+        return ProcessUtil.returnCorrect(resultJson);
+    }
+    
+    /**
+     * 6
+     * 跳转到Excel导入页面
+     */
+    @RequestMapping(URL_PREFIX+"/add/excelUI")
+    public String excelimportUI() throws ToJSPException{
+        try {
+        } catch (Exception e) {
+            String errorMsg=ProcessUtil.formatErrMsg("跳转到科目Excel导入页面");
+            LOGGER.error(errorMsg, e);
+            throw new ToJSPException(errorMsg);
+        }
+        return JSP_PREFIX+"/excelimport";
+    }
+    
+    /**
+     * 7
+     * excel上传
+     */
+    @RequestMapping(URL_PREFIX+"/add/excel")
+    @ResponseBody
+    public JSONObject excelimport(MultipartFile excelFile) throws ToJSPException{
+        resultJson=new JSONObject();
+        HSSFWorkbook workbook=null;
+        try {
+            //1 获取excel
+            workbook=new HSSFWorkbook(excelFile.getInputStream());
+            HSSFSheet sheet=workbook.getSheetAt(0);
+            //空表返回
+            if (sheet.getLastRowNum()==0) {
+                return ProcessUtil.returnError(resultJson, "Excel数据为空");
+            }
+            Iterator<Row> iterator=sheet.rowIterator();
+            //2 迭代row
+            List<Question> list=new ArrayList<Question>();
+            Question question=null;//临时问题对象
+            List<Subject> sList= subjectService.listModels(new HashMap<String,Object>());//合法的sId集合
+            
+            //获取sheet中显示指明的记录数
+            long totalRow=(long)sheet.getRow(0).getCell(3).getNumericCellValue();
+            iterator.next();//跳过第一行
+            Row tempRow=null;
+            for (long j = 0; j < totalRow; j++) {
+                tempRow=iterator.next();
+                //2.1 数据校验
+                String content=tempRow.getCell(0).getStringCellValue();//内容
+                String answer=tempRow.getCell(1).getStringCellValue();//答案
+                short sId=(short)tempRow.getCell(2).getNumericCellValue();//科目
+                //sId合法性校验
+                boolean legal=false;
+                sIdCheck:
+                for (int i = 0; i < sList.size(); i++) {
+                    if (sId==sList.get(i).getId()) {
+                        legal=true;
+                        break sIdCheck;
+                    }
+                }
+                if (!legal) {
+                    StringBuffer sb=new StringBuffer("第").append(tempRow.getRowNum()+1)
+                            .append("行所属科目类型不存在或格式错误。");
+                    return ProcessUtil.returnError(resultJson,sb.toString());
+                }
+                
+                //2.2 操作
+                question=new Question();
+                question.setContent(content);
+                question.setAnswer(answer);
+                question.setSubject(sId);
+                list.add(question);
+            }
+            
+            //3 批量插入
+            int count=questionService.insertListSelective(list);
+            resultJson.put("correctMsg", "成功插入了"+count+"条记录");
+        } catch (Exception e) {
+            String errorMsg=ProcessUtil.formatErrMsg("请确保Excel格式正确或联系管理员，在操作Excel");
+            if (e instanceof PacketTooBigException) {
+                errorMsg=ProcessUtil.formatErrMsg("Excel文件");
+            }
+            
+            LOGGER.error(errorMsg, e);
+            return ProcessUtil.returnError(500, errorMsg);
+        } finally{
+            try {
+                workbook.close();//关闭
+            } catch (IOException e) {
+                String errorMsg=ProcessUtil.formatErrMsg("关闭Excel");
+                LOGGER.error(errorMsg, e);
+                return ProcessUtil.returnError(500, errorMsg);
+            }
         }
         return ProcessUtil.returnCorrect(resultJson);
     }

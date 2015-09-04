@@ -7,10 +7,12 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.lm.busi.dao.QuestionMapper;
 import com.lm.busi.model.Question;
 import com.lm.busi.service.QuestionService;
+import com.lm.utils.ProcessUtil;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
@@ -37,6 +39,17 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public int insertSelective(Question record) {
         return questionMapper.insertSelective(record);
+    }
+    @Transactional
+    @Override
+    public int insertListSelective(List<Question> list) {
+        int correctCount=0;
+        //将要插入的数据分为300每组(当size大于300)
+        List<List<Question>> listList=ProcessUtil.subList(list, 300);
+        for (int i = 0; i < listList.size(); i++) {
+            correctCount+=questionMapper.insertListSelective(listList.get(i));
+        }
+        return correctCount;
     }
 
     /**

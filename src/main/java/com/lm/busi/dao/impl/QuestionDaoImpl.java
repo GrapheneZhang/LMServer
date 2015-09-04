@@ -31,6 +31,10 @@ public class QuestionDaoImpl extends BaseDao implements QuestionMapper {
     public int insertSelective(Question record) {
         return getSqlSession().insert(NAMESPACE+"insertSelective", record);
     }
+    @Override
+    public int insertListSelective(List<Question> list) {
+        return getSqlSession().insert(NAMESPACE+"insertListSelective", list);
+    }
 
     
     /*** 删除 ***/

@@ -8,6 +8,7 @@ import com.lm.busi.model.Question;
 
 public interface QuestionService {
     int insertSelective(Question record);
+    int insertListSelective(List<Question> list);
     
     void deleteByPrimaryKeys(Long... ids);
     

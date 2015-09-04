@@ -62,6 +62,16 @@
 				NOW()
 		</trim>
 	</insert>
+	
+	<!-- 批量插入 -->
+	<insert id="insertListSelective" parameterType="java.util.ArrayList">
+		insert into lm_question(content, answer, subject, update_time) values 
+		<foreach collection="list" item="question" separator=",">
+		    (#{question.content,jdbcType=VARCHAR},#{question.answer,jdbcType=VARCHAR},
+		    #{question.subject,jdbcType=SMALLINT},NOW())
+		</foreach>
+	</insert>
+	
 	<update id="updateByPrimaryKeySelective" parameterType="com.lm.busi.model.Question">
 		update lm_question
 		<set>

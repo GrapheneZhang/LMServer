@@ -5,7 +5,7 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/commons/ajaxfileupload.js"></script>
 <script type="text/javascript">
 function ajaxLoading(){
-    var maskLevel=$(".window-mask").css("z-index")+1;
+	var maskLevel=$(".window-mask").css("z-index")+1;
     $(".window-mask").css("z-index",maskLevel);
     $("<div class=\"datagrid-mask\"></div>").css({display:"block",width:"100%",height:$(window).height()}).appendTo("body"); 
     $("<div class=\"datagrid-mask-msg\"></div>").html("正在处理，请稍候。。。").appendTo("body").css({"z-index":maskLevel+1,display:"block",left:($(document.body).outerWidth(true) - 190) / 2,top:($(window).height() - 45) / 2}); 
@@ -28,7 +28,7 @@ $(function(){
         }, submitHandler:function(form){
         	ajaxLoading();//loding
         	$.ajaxFileUpload({
-                url:"${pageContext.request.contextPath}/lmuser/add/excel",
+                url:"${pageContext.request.contextPath}/question/add/excel",
                 type: "POST",
                 secureuri: false,
                 fileElementId: 'excelFile',
@@ -55,7 +55,7 @@ $(function(){
 <form id="form" method="post" action="" enctype="multipart/form-data">
     <table>
         <tr>
-            <td colspan="2">请选择基于“雷鸣用户Excel导入.xls”文件的文件(不能大于10MB)</td>
+            <td colspan="2">请选择基于“题目Excel导入.xls”文件的文件(不能大于10MB)</td>
         </tr>
         <tr>
             <td>Excel文件:</td>

@@ -294,9 +294,12 @@ public class LMUserAction {
             List<Map<String,Object>> rowList=new ArrayList<Map<String,Object>>();
             Map<String,Object> map=null;//用来存放手机号和科目
             LMUser lmUser=null;//临时雷鸣用户对象
+            
+            //获取sheet中显示指明的记录数
+            long totalRow=(long)sheet.getRow(0).getCell(2).getNumericCellValue();
             iterator.next();//跳过第一行
             Row tempRow=null;
-            while(iterator.hasNext()){
+            for (long j = 0; j < totalRow; j++) {
                 tempRow=iterator.next();
                 //2.1 数据校验
                 //手机号码
@@ -326,7 +329,7 @@ public class LMUserAction {
             int count=lMUserService.insertList(rowList);
             resultJson.put("correctMsg", "成功插入了"+count+"条记录");
         } catch (Exception e) {
-            String errorMsg=ProcessUtil.formatErrMsg("请确保Excel格式正确，在操作Excel");
+            String errorMsg=ProcessUtil.formatErrMsg("请确保Excel格式正确或联系管理员，在操作Excel");
             if (e instanceof DuplicateKeyException) {
                 String duplicateKey=((DuplicateKeyException)e).getLocalizedMessage();
                 errorMsg=new StringBuffer("用户名(手机号)：").

@@ -8,6 +8,7 @@ import com.lm.busi.model.Question;
 public interface QuestionMapper {
     int insert(Question record);
     int insertSelective(Question record);
+    int insertListSelective(List<Question> list);
     
     int deleteByPrimaryKey(Long id);
     int deleteByPrimaryKeys(Map<String, Object> map);

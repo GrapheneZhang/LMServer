@@ -108,6 +108,20 @@ function fillGird(){
                 });
             }
         },'-',{
+            text:'Excel导入',
+            iconCls:'icon-excel',
+            handler:function(){
+                $('#div_cu').dialog({
+                    title:"Excel导入",
+                    height:"50%",
+                    width:"50%",
+                    close:false,
+                    cache:false,
+                    href:baseUrl+"/question/add/excelUI",
+                    modal:true
+                });
+            }
+        },'-',{
             text:'<input type="search" id="search" placeholder="请输入任意文字" /><input type="button" id="doSearch" value="搜索" />'
         }]
     });
