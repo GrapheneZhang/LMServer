@@ -44,8 +44,9 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public int insertListSelective(List<Question> list) {
         int correctCount=0;
-        //将要插入的数据分为300每组(当size大于300)
-        List<List<Question>> listList=ProcessUtil.subList(list, 300);
+        //将要插入的数据分为500每组(当size大于500),
+        //此数据与我设计字段累计空间和DB的max_allowed_packet有关，设置其为6M
+        List<List<Question>> listList=ProcessUtil.subList(list, 500);
         for (int i = 0; i < listList.size(); i++) {
             correctCount+=questionMapper.insertListSelective(listList.get(i));
         }

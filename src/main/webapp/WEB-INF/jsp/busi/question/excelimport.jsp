@@ -13,7 +13,8 @@ function ajaxLoading(){
 } 
 function ajaxLoadEnd(){ 
      $(".datagrid-mask").remove(); 
-     $(".datagrid-mask-msg").remove();             
+     $(".datagrid-mask-msg").remove();
+     $(".window-mask").remove();
 }
 $(function(){
     $("#form").validate({

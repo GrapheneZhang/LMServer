@@ -6,6 +6,6 @@
 <title>访问拒绝</title>
 </head>
 <body>
-访问拒绝
+访问拒绝，您没有此项操作的权限。
 </body>
 </html>
