@@ -42,13 +42,13 @@ $(function(){
             <td>题目内容:</td>
             <td>
                 <sp:input type="hidden" path="id" id="id" />
-                <sp:textarea path="content" id="content"></sp:textarea>
+                <sp:textarea path="content" id="content" rows="8" cols="70" ></sp:textarea>
             </td>
         </tr>
         <tr>
             <td>答案:</td>
             <td>
-                <sp:textarea path="answer" id="answer"></sp:textarea>
+                <sp:textarea path="answer" id="answer" rows="8" cols="70" ></sp:textarea>
             </td>
         </tr>
         <tr>

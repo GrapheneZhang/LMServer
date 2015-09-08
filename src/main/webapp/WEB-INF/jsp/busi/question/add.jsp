@@ -41,13 +41,13 @@ $(function(){
         <tr>
             <td>题目内容:</td>
             <td>
-                <textarea name="content" id="content"></textarea>
+                <textarea name="content" id="content" rows="8" cols="70" ></textarea>
             </td>
         </tr>
         <tr>
             <td>答案:</td>
             <td>
-                <textarea name="answer" id="answer"></textarea>
+                <textarea name="answer" id="answer" rows="8" cols="70" ></textarea>
             </td>
         </tr>
         <tr>
