@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
@@ -284,7 +285,7 @@ public class LMUserAction {
         try {
             String fileName=excelFile.getOriginalFilename();
             int fileNameLength=fileName.length();
-            if(".xls".equals(fileName.substring(fileNameLength-4, fileNameLength))){
+            if(!".xls".equals(fileName.substring(fileNameLength-4, fileNameLength))){
                 return ProcessUtil.returnError(resultJson, "文件格式错误,必须为.xls");
             }
             //1 获取excel
@@ -315,7 +316,9 @@ public class LMUserAction {
                     return ProcessUtil.returnError(resultJson,sb.toString());
                 }
                 //科目类型
-                String stringSids=tempRow.getCell(1).getStringCellValue();
+                Cell tempCell = tempRow.getCell(1);
+                tempCell.setCellType(Cell.CELL_TYPE_STRING);
+                String stringSids=tempCell.getStringCellValue();
                 if (!Validate.isStringWithComma(stringSids)) {
                     StringBuffer sb=new StringBuffer("第").append(tempRow.getRowNum()+1)
                             .append("行科目类型格式有误。");

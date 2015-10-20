@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -247,8 +248,14 @@ public class QuestionAction {
             for (long j = 0; j < totalRow; j++) {
                 tempRow=iterator.next();
                 //2.1 数据校验
-                String content=tempRow.getCell(0).getStringCellValue();//内容
-                String answer=tempRow.getCell(1).getStringCellValue();//答案
+                //强制设置String格式
+                Cell tempCell0 = tempRow.getCell(0);
+                Cell tempCell1 = tempRow.getCell(1);
+                tempCell0.setCellType(Cell.CELL_TYPE_STRING);
+                tempCell1.setCellType(Cell.CELL_TYPE_STRING);
+                
+                String content=tempCell0.getStringCellValue();//内容
+                String answer=tempCell1.getStringCellValue();//答案
                 short sId=(short)tempRow.getCell(2).getNumericCellValue();//科目
                 //sId合法性校验
                 boolean legal=false;
